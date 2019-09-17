@@ -1,0 +1,15 @@
+def func(x):
+    x1 = []
+    x2 = []
+    for i in x:
+        if i not in x1:
+            x1.append(i)
+    while 1:
+        min_x = min(x1)
+        x1.remove(min_x)
+        x2.append(min_x)
+        if len(x1) == 0:
+            break
+    length = len(x2)
+    return length,x2
+func([1,2,5,9,7,5,2,1,1,1,3])  
