@@ -181,3 +181,149 @@ public:
 };
 ```
 
+
+
+## 128. Longest Consecutive Sequence
+
+题目描述：
+
+![1568772449859](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1568772449859.png)
+
+解题思路：
+
+![1568771179332](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1568771179332.png)
+
+```cpp
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        unordered_map<int, int> h;
+        for(int num : nums)
+        {
+            if(h.count(num)) continue; //去除重复的数
+            
+            // 查找num的左右两边是否有邻居，有的话返回邻居的连续序列长度，没有的话返回0
+            auto it_l = h.find(num - 1);
+            auto it_r = h.find(num + 1);
+            int l = it_l != h.end() ? it_l->second : 0;
+            int r = it_r != h.end() ? it_r->second : 0;
+            
+            //左右都有元素，相当于一个桥，将桥的两边的长度+1 
+            if (l>0 && r>0)
+            {
+                h[num] = h[num - l] = h[num + r] = l + r + 1;
+            }
+            else if(l>0)  // 左边有邻居，将最左边的边界的连续序列长度加1
+            {
+                h[num] = h[num - l] = l + 1;
+            }
+            else if(r>0)  // 右边有邻居， 将最右边的边界的连续序列长度加1
+            {
+                h[num] = h[num + r] = r + 1;
+            }
+            else  // 左右都没有邻居，那么它本身连续序列长度就是1
+            {
+                h[num] = 1;
+            }  
+        }
+        
+        //遍历hash table
+        int ans = 0;
+        for (const auto& kv : h)
+        {
+            ans = max(ans, kv.second);
+        }
+        return ans;
+    }
+};
+
+```
+
+代码优化：
+
+```cpp
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        unordered_map<int, int> h;
+        int ans = 0;
+        for(int num : nums)
+        {
+            // 去重
+            if(h.count(num)) continue;
+            
+            // 查找左右边界
+            auto it_l = h.find(num - 1);
+            auto it_r = h.find(num + 1);
+            
+            int l = it_l != h.end() ? it_l->second : 0;
+            int r = it_r != h.end() ? it_r->second : 0;
+            int t = l + r + 1;
+            
+            h[num] = h[num - l] = h[num + r] = t;
+           
+            ans = max(ans, t);
+        }
+        
+        return ans;
+    }
+};
+```
+
+
+
+**解法2：但是会超时，可以学习思想**
+
+![1568772957752](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1568772957752.png)
+
+
+
+```cpp
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        unordered_set<int> h(nums.begin(), nums.end());
+        int ans = 0;
+        for(int num : nums)
+        {
+            if(!h.count(num-1))
+            {
+                int l = 0;
+                while(h.count(num++)) ++l;
+                ans = max(ans, l);
+            }
+        }
+        
+        return ans;
+    }
+};
+```
+
+## Two sum
+
+**题目描述：**
+
+![1568775187311](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1568775187311.png)
+
+**解题思路：**
+
+使用一个hash table，直接查找target-nums[i]是否在hash table中，如果在说明原始数组中存在两个数相加等于target，如果不在，则将nums[i]添加到hash table 中，但是需要注意的是使用数组的值作为key, 数组的索引作为value。
+
+```cpp
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> h;
+        for(int i=0; i<nums.size(); i++)
+        {
+            if (h.count(target - nums[i]))
+            {
+                return {h[target-nums[i]], i};
+            }
+            h[nums[i]] = i;
+        }
+        return {};
+    }
+};
+```
+
