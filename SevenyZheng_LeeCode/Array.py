@@ -68,44 +68,48 @@ class Solution:
 
 #思路一
 class Solution:
-    def binary_search(self,target_value,nums):
+    def binary_search(self,nums,target):
         """
-        正常二分法查找代码
+        正常二分法查找代码(传入的数组为有序数组)
         """
+        if len(nums) == 0:
+            return -1
+        if len(nums) == 1:
+            return 0 if nums[0] == target else -1
         index = -1
         l = 0
         r = len(nums) - 1
         while l <= r:
             mid = (l + r)//2
-            if nums[mid] < target_value:
+            if nums[mid] < target:
                 l = mid + 1
-            elif nums[mid] > target_value:
+            elif nums[mid] > target:
                 r = mid - 1
             else:
                 index = mid
                 break
         return index
 
-    def Rotated(self,nums,target_value):
+    def search(self,nums,target):
         """
         :type nums:list[int]
         :type target_value:int
         :rtype:int
         """
-        pol = len(nums) - 1 #从数组末尾开始找第二段升序空间的七点
+        pol = len(nums) - 1 #从数组末尾开始找第二段升序空间的起点，即旋转数组的分割点
         while pol > 0 and nums[pol] >= nums[pol - 1]:
             pol -= 1
-            ans = self.binary_search(target_value,nums[:pol])#对前面这段升序空间实行二分查找
-            if ans == -1:#若未找到
-                ans = self.binary_search(target_value,nums[pol:])#继续在后面的升序空间实行二分查找
-                if ans != -1:#第二次找到
-                    return True
-                else:
-                    return False
-            else:
-                return True
             
-        
+        ans = self.binary_search(nums[:pol],target)#对前面这段升序空间实行二分查找
+        if ans == -1:#若未找到
+            ans = self.binary_search(nums[pol:],target)#继续在后面的升序空间实行二分查找
+            if ans != -1:#第二次找到
+                return pol+ans
+            else:
+                return ans
+        else:
+            return ans 
+            
 
 #思路二
 class Solution:
@@ -138,49 +142,51 @@ class Solution:
 
 思路1：代码同上题。利用数组被切分成两部分升序空间的特性，找到两段空间的交错点；再分别对两段空间实行二分查找
 
-思路2：代码同上题。每旋转一次，即每次将数组中第一个元素截取出来，放到数组的最后一个位置上。因此，旋转k次，即将数组中前k个元素截取出来，不改变顺序地放到数组的末尾。故可采用list自带的切片功能，将旋转k次后切片的数组 与 剩余的数组 拼接起来，形成新的数组。
-注意，思路2 这里是返回重复元素中的第一个
-
 """		
 
 #思路一
 class Solution:
-    def binary_search(self,target_value,nums):
+    def binary_search(self,nums,target):
         """
-        正常二分法查找代码
+        正常二分法查找代码(传入的数组为有序数组)
         """
+        if len(nums) == 0:
+            return -1
+        if len(nums) == 1:
+            return 0 if nums[0] == target else -1
         index = -1
         l = 0
         r = len(nums) - 1
         while l <= r:
             mid = (l + r)//2
-            if nums[mid] < target_value:
+            if nums[mid] < target:
                 l = mid + 1
-            elif nums[mid] > target_value:
+            elif nums[mid] > target:
                 r = mid - 1
             else:
                 index = mid
                 break
         return index
 
-    def Rotated(self,nums,target_value):
+    def search(self,nums,target):
         """
         :type nums:list[int]
         :type target_value:int
         :rtype:int
         """
-        pol = len(nums) - 1 #从数组末尾开始找第二段升序空间的七点
+        pol = len(nums) - 1 #从数组末尾开始找第二段升序空间的起点，即旋转数组的分割点
         while pol > 0 and nums[pol] >= nums[pol - 1]:
             pol -= 1
-            ans = self.binary_search(target_value,nums[:pol])#对前面这段升序空间实行二分查找
-            if ans == -1:#若未找到
-                ans = self.binary_search(target_value,nums[pol:])#继续在后面的升序空间实行二分查找
-                if ans != -1:#第二次找到
-                    return True
-                else:
-                    return False
-            else:
+            
+        ans = self.binary_search(nums[:pol],target)#对前面这段升序空间实行二分查找
+        if ans == -1:#若未找到
+            ans = self.binary_search(nums[pol:],target)#继续在后面的升序空间实行二分查找
+            if ans != -1:#第二次找到
                 return True
+            else:
+                return False
+        else:
+            return True 
             
             
 """
