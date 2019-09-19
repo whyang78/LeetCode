@@ -299,7 +299,7 @@ public:
 };
 ```
 
-## Two sum
+## 1.Two sum
 
 **题目描述：**
 
@@ -325,5 +325,101 @@ public:
         return {};
     }
 };
+```
+
+## 15. 3Sum
+
+题目描述：
+
+![1568902975995](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1568902975995.png)
+
+解题思路：
+
+因为最终返回的是所有的满足三个数和等于零的三元组，而不是对应的下标，所以首先对数组进行排序，然后充分利用排序后数组的性质，去遍历整个数组，在遍历的同时再使用左右两个指针分别指向当前遍历元素的下一个元素，以及数组的最后一个元素，通过判断这三个元素的和的大小来将前后两个指针进行移动进而逼近目标值0.但是由于不能出现重复的，所以在遍历整个数组的时候，遇到相同的数字应该跳过（因为数组已经有序了所以只要相同的跳过，后面也就不会在遇到了）。
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> ret;
+        std::sort(nums.begin(), nums.end());
+        const int n = nums.size();
+        for (int i=0; i<n-2; i++)  //注意数组后面的空余
+        {
+            if (nums[i]>0) break;
+            if (i>0 && nums[i] == nums[i-1]) continue;
+            
+            int l = i+1;
+            int r = n-1;
+            while(l < r)
+            {
+                if (nums[i] + nums[l] + nums[r] == 0)
+                {
+                    ret.push_back({nums[i], nums[l++], nums[r--]});
+                    while(l < r && nums[l] == nums[l-1]) ++l;
+                    while(l < r && nums[r] == nums[r+1]) --r;
+                }
+                else if(nums[i] + nums[l] +nums[r] < 0) ++l;
+                else --r;
+            }
+        }
+        return ret;
+    }
+};
+
+```
+
+
+
+## 16. 3Sum Close
+
+题目描述：
+
+![1568903387937](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1568903387937.png)
+
+解题思路：
+
+    1. 首先分析题目是要返回满足条件的数组的值的集合，而不是其索引，所以这里可以对原数组进行排序
+    2. 可以三个指针，一个用来遍历整个数组，另外两个分别位于排序后数组的最前端和最后端
+    3. 计算三个指针所对应的值的和，如果和等于target，即是最近的，直接返回就行，因为题目中说了只有唯一解
+    3. 如果和大于target， 首先判断这次的sum与target的距离是不是比上一次的更接近，如果是的话就把这次的记录下来，否则
+        根据情况将两个指针进行推移
+    4. 指针推移的准则是：在每一次外层遍历中（即对于i的遍历），如果sum>target，通过调节另外另个指针来缩小差距，此时应该
+        将二层循环中指向较大值那边的指针往中间移动，反之是将指向较小值的指针往中间移动
+```cpp
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        sort(nums.begin(), nums.end());
+        
+        int gap = INT_MAX;
+        int ret;
+        const int n = nums.size();
+        for (int i=0; i<n-2; i++)
+        {
+            int l = i+1;
+            int r = n-1;
+            
+            while( l<r )
+            {
+                int sum = nums[i] + nums[l] + nums[r];
+                if (sum == target) return sum;
+                //每次遍历都要记录当前的和与target的距离，如果更小则更新最近的sum，否则保留上一次的sum
+                int diff = abs(sum-target);
+                if (diff<gap)
+                {
+                    gap = diff;
+                    ret = sum;
+                }
+                
+                if (sum>target) --r;
+                else ++l;
+            }
+        }
+        
+        return ret;
+    }
+};
+
 ```
 
