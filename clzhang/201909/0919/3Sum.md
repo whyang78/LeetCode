@@ -1,0 +1,74 @@
+# Question: 3Sum（找和为0的三个数）
+
+Given an array S of n integers, are there elements a, b, c in S such that a + b + c = 0? Find all unique 
+
+triplets in the array which gives the sum of zero. 
+
+Note: 
+
+• Elements in a triplet (a, b, c) must be in non-descending order. (ie, a ≤ b ≤ c) 
+
+• The solution set must not contain duplicate triplets. 
+
+For example, given array S = {-1 0 1 2 -1 -4}. 
+
+A solution set is: 
+
+(-1, 0, 1) 
+
+(-1, -1, 2) 
+
+给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。
+
+注意：答案中不可以包含重复的三元组。
+
+例如, 给定数组 nums = [-1, 0, 1, 2, -1, -4]，
+
+满足要求的三元组集合为：
+[
+  [-1, 0, 1],
+  [-1, -1, 2]
+]
+
+## 先排序，固定一个，另外两个左右夹逼，复杂度$\mathcal{O}(n^2)$。
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        if (nums.size() < 3) return vector<vector<int>>();
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> res;
+        for (int i = 0; i <= nums.size() - 2; ++i) {
+            
+            if(i > 0 && nums[i] == nums[i-1]){  //去重
+                continue;
+            }
+            int lp = i + 1;
+            int rp = nums.size() - 1;
+            while (lp < rp) {
+                while(lp > i+1 && lp < rp && nums[lp] == nums[lp-1]){   //去重
+                    lp++;
+                }
+                while(rp < nums.size() - 2 &&  lp < rp && nums[rp] == nums[rp+1]){  //去重
+                    rp--;
+                }
+                if (lp < rp) {
+                    if (nums[i] + nums[lp] + nums[rp] == 0) {
+                        vector<int> t;
+                        t.push_back(nums[i]);
+                        t.push_back(nums[lp]);
+                        t.push_back(nums[rp]);
+                        res.push_back(t); {rp--;lp++;}
+                    }
+                    else if (nums[i] + nums[lp] + nums[rp] > 0) rp--;
+                    else lp++;
+                }
+            }
+        }
+        return res;
+    }
+};
+
+```
+
