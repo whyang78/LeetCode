@@ -423,3 +423,90 @@ public:
 
 ```
 
+## 18. 4Sum
+
+**题目描述：**
+
+![1568983293018](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1568983293018.png)
+
+**解题思路：**
+
+这题的解题思路和前面的3Sum，3Sum close很相似，也是先对数组进行排序，然后使用两个头尾指针进行逼近。
+
+但是为了提高算法的效率，需要对一些特殊情况进行判断。
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> ret;
+        const int n = nums.size();
+        for(int i=0; i<n-3; ++i)
+        {
+            if (i !=0 && nums[i] == nums[i-1]) continue;
+            //最大的都比目标值小，或者最小的都比目标值大，直接退出循环
+            if (nums[i] + nums[i+1] + nums[i+2] + nums[i+3] > target) break;
+            if (nums[i] + nums[n-1] + nums[n-2] + nums[n-3] < target) continue;
+            
+            for(int j = i+1; j<n-2; ++j)
+            {
+                int l = j+1;
+                int r = n-1;
+                
+                if (j != i+1 && nums[j] == nums[j-1]) continue;
+                    
+                while(l<r)
+                {
+                    if(nums[i] + nums[j] + nums[l] + nums[r] == target)
+                    {
+                        ret.push_back({nums[i], nums[j], nums[l++], nums[r--]});
+                        while(l<r && nums[l] == nums[l-1]) l++;
+                        while(l<r && nums[r] == nums[r+1]) r--;
+                    }
+                    else if(nums[i] + nums[j] + nums[l] + nums[r] > target)
+                        while(l<--r && nums[r] == nums[r+1]);
+                    else
+                        while(++l<r && nums[l] == nums[l-1]);
+                }
+                
+            }
+        }
+        return ret;
+    }
+};
+```
+
+
+
+## 27. Remove Element
+
+**题目描述：**
+
+![1568983633770](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1568983633770.png)
+
+解题思路：
+
+这道题与26. Remove Duplicate from Sorted Array有点点类似，26题是对已经有序的数组删除重复元素，采用的方法是引入一个从零开始的变量作为数组最新元素的索引，如果遇到相等的值，循环变量加1跳过知道遇到不相等的值，引入的变量和循环变量同时往后面移动。这道题是给定一个要删除的数，直接在原地删除，同样可以使用一个索引来作为数组中更新最新的元素，然后遍历数组，如果当前数组的值与目标值不相等，则索引值和遍历数组的值一起往后移动，否则只移动遍历数组的那个量。
+
+```cpp
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        if (nums.empty()) {return 0;}
+        // 直接定义一个索引，在原数组上进行修改
+        int ret = 0;
+        for (int i=0; i<nums.size(); i++)
+        {
+            if (nums[i] != val)
+            {
+                nums[ret++] = nums[i]; //如果与目标值不相等，把值放在该数组新的索引上，然后++
+            }
+        }
+        return ret;
+    }
+};
+```
+
+
+
