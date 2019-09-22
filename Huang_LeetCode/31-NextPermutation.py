@@ -14,5 +14,5 @@ class Solution:
             nums[i:] = sorted(nums[i:])  # 交换点后的数字进行升序排列
             for j in range(i, n):
                 if nums[j] > nums[i - 1]:
-                    nums[i - 1], nums[j] = nums[j], nums[i - 1]  #交换
+                    nums[i - 1], nums[j] = nums[j], nums[i - 1]  # 交换
                     break
