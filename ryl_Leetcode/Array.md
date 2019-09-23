@@ -510,3 +510,70 @@ public:
 
 
 
+## 31. Next-Permutation
+
+**题目描述：**
+
+![1569248500777](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1569248500777.png)
+
+**解题思路：**
+
+题目的大概意思就是，给定一个多位的数值，让你使用序列中的数字，重新排列成比原始数值大的所有值中最小的那一个数值叫做下一个排列。
+
+可以从数字的最低位（个位），从后往前遍历到第一个不满足升序的数字，将它的下标记为i,在从所有的数字中找出比nums[i]大的元素中最小的那一个，将其下标记为j,然后将nums[i],和nums[j]进行交换，在将i后面的所有元素逆转。这样就是一个满足要求的下一个排列。
+
+刚开始不好理解，多想想就好了。
+
+```cpp
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        int i = nums.size()-2;
+        
+        //找到第一个不满足升序的元素索引
+        while(i>=0 && nums[i+1] <= nums[i]) i--;
+        
+        //第i个元素后面找比nums[i]大但是最小的那个元素的索引
+        if(i>=0)
+        {
+            int j = nums.size()-1;
+            while(j>=0 && nums[j] <= nums[i]) j--;
+            swap(nums[i], nums[j]);
+        }
+
+        reverse(begin(nums) + i + 1, end(nums));
+    }
+};
+
+```
+
+## 60. Permutation Sequence
+
+**题目描述：**
+
+![1569248902119](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1569248902119.png)
+
+**解题思路：**
+
+写这题首先需要对31.Next Permutation理解了才能理解这里的第K个排列。就是说给定一个数字n,形成了一个1~n的序列[1,2,3,...,n]作为初始的序列，然后求这个序列的第k个排列（想一想next permutation）
+
+最简单的一种做法就是使用next permutation k-1次就得到了结果，因为C++ 中自带了next_permutation 这个函数，并且效率比自己写的高，所以直接使用自带的函数来完成。
+
+```cpp
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+        string ret = "";
+        for(int i=0; i<n; i++) ret += i + '1';
+        while(--k)
+        {
+            next_permutation(ret.begin(), ret.end());
+        }
+        
+        return ret;
+    }
+};
+```
+
+更高效的思路下次有空在补上。
+
