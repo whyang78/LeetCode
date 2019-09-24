@@ -1,0 +1,59 @@
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        int n,i,j,k;
+        n=nums.size();
+        int min,min_value=99999;;
+        int left=0,right,left_value=nums[0],p,flag=0;
+        int exchange[n];
+        if(n==1)return;
+        for(i=n-2;i>=0;i--)
+        {
+            if(i<0)break;
+            if(nums[i]<nums[i+1])
+            {
+                left=i;
+                left_value=nums[i];
+                flag=1;
+                break;
+            }
+        }
+        if(flag==1)
+        {
+            for(i=left+1;i<n;i++)
+            {
+                k=nums[i]-left_value;
+                if(k>0&&k<=min_value)
+                {
+                    min_value=k;
+                    min=i;
+                }
+            }
+            nums[left]=nums[min];
+            nums[min]=left_value;
+            k=0;
+            for(i=n-1;i>left;i--)
+            {
+                exchange[k++]=nums[i];
+            }
+            k=0;
+            for(i=left+1;i<n;i++)
+            {
+                nums[i]=exchange[k++];
+            }
+        }
+        else
+        {
+            k=0;
+            for(i=n-1;i>=0;i--)
+            {
+                exchange[k++]=nums[i];
+            }
+            k=0;
+            for(i=0;i<n;i++)
+            {
+                nums[i]=exchange[k++];
+            }
+        }
+    }
+};

@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int i,j,n=nums.size();
+        int slow=0,fast=0,flag=0;
+        int ans=n;
+        for(i=0;i<n;i++)
+        {
+            if(nums[i]==val)
+            {
+                ans--;
+            }
+            else 
+            {
+                nums[slow++]=nums[i];
+            }
+            
+            
+        }
+        return ans;
+    }
+};
