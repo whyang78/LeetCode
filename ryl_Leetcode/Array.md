@@ -577,3 +577,95 @@ public:
 
 更高效的思路下次有空在补上。
 
+## 36. Valid Suduku
+
+题目描述：
+
+![1569335040747](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1569335040747.png)
+
+解题思路：
+
+要想检查整个数独是否有效，只需要按照有效数独的三个定义进行检查判定即可。即每一行每一列并且中间的3x3的格子中的元素都在1-9之间并且不能重复。这里使用C++中的set作为数据结构，set的insert操作可以返回元素是否插入成功。
+
+```cpp
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        //判断行和列
+        for(int i=0; i<9; i++)
+        {
+            set<char> r, c;
+            for(int j=0; j<9; j++)
+            {
+                if(board[i][j] != '.' && !r.insert(board[i][j]).second)
+                    return false;
+                if(board[j][i] != '.' && !c.insert(board[j][i]).second)
+                    return false;
+            }
+        }
+        //判断3x3的格子
+        for(int p=0; p<3; p++)
+        {
+            for(int q=0; q<3; q++)
+            {
+                set<char> box;
+                for(int i=0; i<3; i++)
+                {
+                    for(int j=0; j<3; j++)
+                    {
+                        int x = p*3 + i;
+                        int y = q*3 + j;
+                        if(board[y][x] != '.' && !box.insert(board[y][x]).second)
+                            return false;
+                    }
+                }
+                
+            }
+        }
+        return true;
+    }
+};
+```
+
+## Trap Rain Water
+
+题目描述：
+
+![1569336158359](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1569336158359.png)
+
+解题思路：
+
+下面这个链接给出了求解这个问题的三种方法。
+
+https://www.cnblogs.com/logosg/p/7979690.html
+
+这里使用第一种方法，效率比较低。
+
+```cpp
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int ans = 0;
+        int size = height.size();
+        for(int i=1; i<size-1; i++)
+        {
+            int max_right = 0;
+            int max_left = 0;
+            for(int j=i; j>=0; j--)
+            {
+                max_left = max(max_left, height[j]);
+            }
+            
+            for(int j=i; j<size; j++)
+            {
+                max_right = max(max_right, height[j]);
+            }
+            
+            ans += min(max_left, max_right) - height[i];
+        }
+        
+        return ans;
+    }
+};
+```
+
