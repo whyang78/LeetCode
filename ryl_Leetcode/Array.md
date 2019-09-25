@@ -627,7 +627,7 @@ public:
 };
 ```
 
-## Trap Rain Water
+## 42. Trap Rain Water
 
 题目描述：
 
@@ -668,4 +668,72 @@ public:
     }
 };
 ```
+
+## 48. Rotate Image
+
+题目描述：
+
+![1569405528714](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1569405528714.png)
+
+解题思路：
+
+题目的意思是将一个矩阵顺时针旋转90度。也就是第一行变成了最后一列，第二行变成倒数第二列，以此类推。矩阵的转置是第一行变成第一列，第二行变成第二列，一次类推。所以我们可以先把矩阵进行转置之后再将每一行的元素进行reverse。
+
+```cpp
+class Solution {
+public:
+    void rotate(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        for(int i=0; i<n; i++)
+        {
+            for(int j=i+1; j<n; j++)
+            {
+                swap(matrix[i][j], matrix[j][i]);
+            }
+        }
+        
+        for(int i=0; i<n; i++)
+        {
+            reverse(matrix[i].begin(), matrix[i].end());
+        }
+    }
+};
+```
+
+
+
+## 66. Plus one
+
+题目描述：
+
+![1569405384754](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1569405384754.png)
+
+解题思路：
+
+题目的意思就是将一个数组看做一个整数，然后返回加1之后的数组。这里主要需要注意的就是加1之后可能会使得整个数组变长。
+
+```cpp
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) {
+        int n = digits.size() - 1;
+        int c = 1;
+        while(n>=0)
+        {
+            digits[n] += c;
+            c = digits[n] / 10;
+            digits[n] = digits[n] % 10;
+            n--;
+        }
+        
+        //需要考虑可能一直有进位，导致最后数组增加了一个元素
+        if (c>0) digits.insert(digits.begin() , c);
+        
+        return digits;
+    }
+};
+
+```
+
+
 
