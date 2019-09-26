@@ -735,5 +735,64 @@ public:
 
 ```
 
+## 89. Gray code
 
+题目描述：
+
+![1569462690949](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1569462690949.png)
+
+解题思路：
+
+格雷码其实是一种特殊的二进制编码方式，并且从二进制码转换到格雷码是有一定的规律的：保留二进制码的最高位为格雷码的最高位，然后格雷码的次高位为二进制码的最高位与次高位的异或，一次类推。
+
+![1569462800054](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1569462800054.png)
+
+所以可以根据这种性质直接将一个数进行格雷编码。
+
+题目中给出了编码的总位数，所以这里需要注意的是，如果是从二进制转换到格雷码这种方式进行求解，迭代的次数是$2^n$也就相当于是二进制的位数。
+
+```cpp
+class Solution {
+public:
+    vector<int> grayCode(int n) {
+        // 异或运算符是从低位到高位进行异或计算
+        vector<int> ret;
+        for(int i=0; i<pow(2, n); i++)
+        {
+            ret.push_back(i^(i>>1));
+        }
+        return ret;
+    }
+};
+```
+
+## 70. Climbing Stairs
+
+题目描述：
+
+![1569462378885](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1569462378885.png)
+
+解题思路：
+
+题目的大概意思就是，爬楼梯只有两种爬法，要么每次爬一个step要么每次爬两个step，然后给出需要爬的楼梯的总的step，求解总共有多少中爬楼梯的方法。
+
+这道题是经典的简单的动态规划的题目。递归的思想是自定向下，而动态规划的思想是自底向上，每次都是用前面保存的结果来进行计算，相比于递归少做了很多次重复的计算。动态规划解题的主要步骤就是找到动态转移方程，然后利用动态转移方程，自底向上求解问题。
+
+```cpp
+class Solution {
+public:
+    int climbStairs(int n) {
+        // f[i] = climbStairs(i)
+        vector<int> f(n+1);
+        f[0] = 1;
+        f[1] = 1; 
+        for(int i=2; i<=n; i++)
+        {
+            f[i] = f[i-1] + f[i-2];
+        }
+
+        return f[n];
+    }
+};
+```
 
