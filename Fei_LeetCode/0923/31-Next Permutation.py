@@ -8,6 +8,7 @@
 # 先找到最大元素以及其下标，如果刚好是逆序则直接调用sort()排序
 # 如果不是则将最大值以及后面的值向前移一位，最大值前面的值放在末尾
 # 但这样理解实现出来的是错的，等看看别人的思路再改
+"""
 def nextPermutation(nums: list):
     if len(nums) < 2:
         return
@@ -24,6 +25,21 @@ def nextPermutation(nums: list):
             nums[j - 1] = nums[j]
         nums[-1] = val
     return nums
+"""
+def nextPermutation(nums: list):
+    length = len(nums)
+    for i in range():
+        if nums[i] < nums[i+1]:
+            for j in range():
+                if nums[j] > nums[i]:
+                    nums[i], nums[j] = nums[j], nums[i]
+                    break
+        while i + 1 < length-1:
+            nums[i+1], nums[length-1] = nums[length-1], nums[i+1]
+            i += 1
+            length -= 1
+        break
+    return nums
 
 
-print(nextPermutation([5, 4, 3, 2, 2]))
+print(nextPermutation([7, 5, 4, 6, 8, 2, 1, 0]))
