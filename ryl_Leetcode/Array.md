@@ -796,3 +796,27 @@ public:
 };
 ```
 
+## 55. Jump Game
+
+题目描述：
+
+![1569599150504](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1569599150504.png)
+
+```cpp
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        int far = nums[0];
+        const int n = nums.size();
+
+        for(int i=0; i<n; i++)
+        {
+            if(far < i) break;
+            far = max(far, i+nums[i]);
+        }
+
+        return far >= (n-1);
+    }
+};
+```
+
