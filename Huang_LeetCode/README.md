@@ -69,6 +69,19 @@ class Solution:
     * 当k=1时,返回min(A[0],B[0])
     * 当A[k/2-1] == B[k/2-1]时,返回A[k/2-1]或B[k/2-1]
 
+8. String to Integer(atoi)
+```python
+class Solution:
+    def myAtoi(self, str: str) -> int:
+        return max(
+            min(int(*re.findall('^[\+\-]?\d+', str.lstrip())), 2**31 - 1),
+            -2**31)
+```
+- 使用正则表达式 ^：匹配字符串开头，[\+\-]：代表一个+字符或-字符，?：前面一个字符可有可无，\d：一个数字，+：前面一个字符的一个或多个，\D：一个非数字字符，*：前面一个字符的0个或多个
+- max(min(数字, 2 ** 31 - 1), -2 ** 31) 用来防止结果越界
+
+
+
 15. 3Sum
 ```python
 class Solution:
@@ -86,6 +99,17 @@ class Solution:
         return list(map(list, r))
 ```
 - sort避免重复,使得输出结果都是升序,用字典记录{需要的值:当前索引},字典会记录比较大的那个索引,用d[n]>j来避免重复选择一个元素,(nums[i], n, -nums[i] - n)保证列表升序
+
+28. Implement strStr()
+```python
+class Solution:
+    def strStr(self, haystack: str, needle: str) -> int:
+        for i in range(len(haystack) - len(needle) + 1):
+            if haystack[i:i + len(needle)] == needle:
+                return i
+        return -1
+```
+- 暴力破解,更高效的算法有KMP,Boyer-Mooer算法和Rabin-Karp算法
 
 80. Remove Duplicates from Sorted Array II
 - 加入一个变量记录元素出现次数
