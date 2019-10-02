@@ -820,3 +820,81 @@ public:
 };
 ```
 
+## 73. Sets metrix zeroes
+
+题目描述：
+
+![1570026865908](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570026865908.png)
+
+![1570026898875](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570026898875.png)
+
+解题思路：
+
+1. 最简单的方法就是变量整个数组中的每个元素，当该元素为零时，将其对应的行和列置零，新建两个数组来标记哪些行需要进行置零。
+
+空间复杂度：O(m+n)
+
+时间复杂度：O(n^2)
+
+```cpp
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        const int m = matrix.size();
+        const int n = matrix[0].size();
+        vector<int> row(m, 0);
+        vector<int> col(n, 0);
+
+        for(int i=0; i<m; i++)
+            for(int j=0; j<n; j++)
+            {
+                //注意：下面是使用|=，这里如果使用=的话可能会造成，前面出现过0，置零后，后面出现非零，又被置成非零了。
+                row[i] |= (matrix[i][j] == 0);
+                col[j] |= (matrix[i][j] == 0);
+            }
+
+        for(int i=0; i<m; i++)
+            for(int j=0; j<n; j++)
+                if(row[i]  || col[j]) matrix[i][j] = 0;
+
+    }
+};
+```
+
+2. 上述是最简单粗暴的方法，但是题目中说到如何使用常数级的空间复杂度去解决这个问题。该如何使用常数集的空间复杂度呢？一种可行的办法：将数组的第一行和第一列用来存储中间的1：m行，1：n列中哪些需要置零，这样的话首先就应该判断第一行和第一列是否需要进行置零，不然第一行和第一列的值会被替换了
+
+```cpp
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        const int m = matrix.size();
+        const int n = matrix[0].size();
+        bool row0 = false;
+        bool col0 = false;
+
+        for(int j=0; j<n; j++)
+            row0 |= (matrix[0][j] == 0);
+        for(int i=0; i<m; i++)
+            col0 |= (matrix[i][0] == 0);
+
+        for(int i=1; i<m; i++)
+            for(int j=1; j<n; j++)
+                if(matrix[i][j] == 0)
+                    matrix[i][0] = matrix[0][j] = 0;      
+
+        for(int i=1; i<m; i++)
+            for(int j=1; j<n; j++)
+                if(matrix[0][j] == 0 || matrix[i][0] == 0)
+                    matrix[i][j] = 0;
+
+        if(row0)
+            for(int j=0; j<n; j++) matrix[0][j] = 0;
+        if(col0)
+            for(int i=0; i<m; i++) matrix[i][0] = 0;  
+        
+    }
+};
+```
+
+
+
