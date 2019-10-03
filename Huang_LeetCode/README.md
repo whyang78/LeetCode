@@ -70,6 +70,21 @@ class Solution:
     * 当k=1时,返回min(A[0],B[0])
     * 当A[k/2-1] == B[k/2-1]时,返回A[k/2-1]或B[k/2-1]
 
+5. [Longest Palindromic Substring](https://leetcode-cn.com/problems/longest-palindromic-substring/)
+```python
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        r = ''
+        for i, j in [(i, j) for i in range(len(s)) for j in (0, 1)]:
+            while i > -1 and i + j < len(s) and s[i] == s[i + j]:
+                i, j = i - 1, j + 2
+            r = max(r, s[i + 1:i + j], key=len)
+        return '' if not s else r
+```
+- 字符串的中心可能是一个字符也可能是两个字符,例如字符串abcbd,回文子串bcb,中心字符为c。字符串abccbd,回文子串bccb,中心字符为cc。所以j的取值为0或1。
+- i 遍历字符串中的每一个字符,通过j的取值判断回文子串的中心字符取值情况。j为0时,子串假设为一个中心字符。j为1时，子串假设为两个中心字符。
+- r保存每次确定中心字符情况后的最大子串
+
 8. [String to Integer(atoi)](https://leetcode-cn.com/problems/string-to-integer-atoi)
 ```python
 class Solution:
@@ -184,7 +199,31 @@ class Solution:
 ```
 - 暴力破解,更高效的算法有KMP,Boyer-Mooer算法和Rabin-Karp算法
 
+67. [Add Binary](https://leetcode-cn.com/problems/add-binary/)
+```python
+class Solution:
+    def addBinary(self, a: str, b: str) -> str:
+        a = int(a, 2)
+        b = int(b, 2)
+        return bin(a + b)[2:]
 
+```
+- 将2进制字符串转为int,相加后再转成二进制,注意对bin结果切片
+```python
+class Solution:
+    def addBinary(self, a: str, b: str) -> str:
+        r, p = '', 0
+        d = len(b) - len(a)
+        a = '0' * d + a
+        b = '0' * -d + b
+        for i, j in zip(a[::-1], b[::-1]):
+            s = int(i) + int(j) + p
+            r = str(s % 2) + r
+            p = s // 2
+        return '1' + r if p else r
+
+```
+- 模拟二进制加法
 
 80. [Remove Duplicates from Sorted Array II](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii)
 - 加入一个变量记录元素出现次数
