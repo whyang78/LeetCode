@@ -1,7 +1,7 @@
-#LeetCode刷题
+# LeetCode刷题-----Python3
 
-#### 版本:python3.7.3
-1. Two Sum
+
+1. [Two Sum](https://leetcode-cn.com/problems/two-sum)
 ```python
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
@@ -12,7 +12,7 @@ class Solution:
 ```
 - 用字典记录 { 需要的值:当前索引 } 时间复杂度:O(n)
 
-2. Add Two Number
+2. [Add Two Number](https://leetcode-cn.com/problems/add-two-numbers)
 ```python
 class Solution:
     def addTwoNumbers(self, l1: ListNode, l2: ListNode, carry=0) -> ListNode:
@@ -25,9 +25,10 @@ class Solution:
 ```
 - 用carry记录进位
 
-3. Longest Substring Without Repeating Characters
+3. [Longest Substring Without Repeating Characters](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters)
 
-4. MedianofTwoSortedArrays
+
+4. [MedianofTwoSortedArrays](https://leetcode-cn.com/problems/median-of-two-sorted-arrays)
 ```python
 class Solution:
     def findKth(self, nums1: List[int], nums2: List[int], k: int):
@@ -69,7 +70,22 @@ class Solution:
     * 当k=1时,返回min(A[0],B[0])
     * 当A[k/2-1] == B[k/2-1]时,返回A[k/2-1]或B[k/2-1]
 
-8. String to Integer(atoi)
+5. [Longest Palindromic Substring](https://leetcode-cn.com/problems/longest-palindromic-substring/)
+```python
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        r = ''
+        for i, j in [(i, j) for i in range(len(s)) for j in (0, 1)]:
+            while i > -1 and i + j < len(s) and s[i] == s[i + j]:
+                i, j = i - 1, j + 2
+            r = max(r, s[i + 1:i + j], key=len)
+        return '' if not s else r
+```
+- 字符串的中心可能是一个字符也可能是两个字符,例如字符串abcbd,回文子串bcb,中心字符为c。字符串abccbd,回文子串bccb,中心字符为cc。所以j的取值为0或1。
+- i 遍历字符串中的每一个字符,通过j的取值判断回文子串的中心字符取值情况。j为0时,子串假设为一个中心字符。j为1时，子串假设为两个中心字符。
+- r保存每次确定中心字符情况后的最大子串
+
+8. [String to Integer(atoi)](https://leetcode-cn.com/problems/string-to-integer-atoi)
 ```python
 class Solution:
     def myAtoi(self, str: str) -> int:
@@ -82,7 +98,7 @@ class Solution:
 
 
 
-15. 3Sum
+15. [3Sum](https://leetcode-cn.com/problems/3sum)
 ```python
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
@@ -100,7 +116,79 @@ class Solution:
 ```
 - sort避免重复,使得输出结果都是升序,用字典记录{需要的值:当前索引},字典会记录比较大的那个索引,用d[n]>j来避免重复选择一个元素,(nums[i], n, -nums[i] - n)保证列表升序
 
-28. Implement strStr()
+18. [4Sum](https://leetcode-cn.com/problems/4sum)
+```python
+class Solution:
+    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
+        import collections
+        from itertools import combinations as com
+        # 将两个索引组合存入l中
+        dic, l = collections.defaultdict(list), [*com(range(len(nums)), 2)]
+        # 将剩下的两数之和作为索引存入dic
+        for a, b in l:
+            dic[target - nums[a] - nums[b]].append((a, b))
+        # 如果nums[c]+nums[d]存在,从字典中取出对应a,b索引
+        r = [(*ab, c, d) for c, d in l for ab in dic[nums[c] + nums[d]]]
+        return [
+            *set(
+                tuple(sorted(nums[i] for i in t))
+                for t in r if len(set(t)) == 4)
+        ]
+```
+- 与2Sum相似,先将总和与任意两数之和的差存入字典,再获得其余任意两个数字,寻找匹配值
+- combinations(iterable, r) 创建一个迭代器,返回iterable中所有长度为r的子序列。combinations(range(4), 3) --> (0,1,2), (0,1,3), (0,2,3), (1,2,3)
+
+19. [Remove Nth Node From End of List](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list)
+```python
+class Solution:
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        p = q = head
+        for i in range(n):
+            q = q.next
+        if not q:
+            return head.next
+        while q.next:
+            q = q.next
+            p = p.next
+        p.next = p.next.next
+        return head
+```
+- 双指针,q先走n步,然后p和q一起走,直到q走到尾节点
+
+24. [Swap Nodes in Pairs](https://leetcode-cn.com/problems/swap-nodes-in-pairs)
+```python
+class Solution:
+    def swapPairs(self, head: ListNode) -> ListNode:
+        pre, pre.next = self, head
+        while pre.next and pre.next.next:
+            a = pre.next
+            b = pre.next.next
+            pre.next, b.next, a.next = b, a, b.next
+            pre = a
+        return self.next
+```
+25. [Reverse Nodes in k-Group](https://leetcode-cn.com/problems/reverse-nodes-in-k-group)
+```python
+class Solution:
+    def reverseKGroup(self, head: ListNode, k: int) -> ListNode:
+        dummy = jump = ListNode(-1)
+        dummy.next = l = r = head
+        while True:
+            count = 0
+            while r and count < k:
+                r = r.next
+                count += 1
+            if count == k:  # 翻转
+                pre, cur = r, l
+                for _ in range(k):
+                    cur.next, cur, pre = pre, cur.next, cur
+                jump.next, jump, l = pre, l, r
+            else:
+                return dummy.next
+```
+- 用count变量控制节点翻转范围,注意各种边界条件
+
+28. [Implement strStr()](https://leetcode-cn.com/problems/implement-strstr)
 ```python
 class Solution:
     def strStr(self, haystack: str, needle: str) -> int:
@@ -111,7 +199,33 @@ class Solution:
 ```
 - 暴力破解,更高效的算法有KMP,Boyer-Mooer算法和Rabin-Karp算法
 
-80. Remove Duplicates from Sorted Array II
+67. [Add Binary](https://leetcode-cn.com/problems/add-binary/)
+```python
+class Solution:
+    def addBinary(self, a: str, b: str) -> str:
+        a = int(a, 2)
+        b = int(b, 2)
+        return bin(a + b)[2:]
+
+```
+- 将2进制字符串转为int,相加后再转成二进制,注意对bin结果切片
+```python
+class Solution:
+    def addBinary(self, a: str, b: str) -> str:
+        r, p = '', 0
+        d = len(b) - len(a)
+        a = '0' * d + a
+        b = '0' * -d + b
+        for i, j in zip(a[::-1], b[::-1]):
+            s = int(i) + int(j) + p
+            r = str(s % 2) + r
+            p = s // 2
+        return '1' + r if p else r
+
+```
+- 模拟二进制加法
+
+80. [Remove Duplicates from Sorted Array II](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii)
 - 加入一个变量记录元素出现次数
 
 138. 复制带随机指针的链表
