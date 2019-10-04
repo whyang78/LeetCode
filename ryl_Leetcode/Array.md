@@ -896,5 +896,143 @@ public:
 };
 ```
 
+## 134. Gas station
+
+题目描述：
+
+![1570152191907](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570152191907.png)
 
 
+
+解题思路：
+
+1. 遍历每一个加油站点，看是否可以走到出发点。这里有可能中途就过不去，比如在某个站点时，剩余的油量不足以到达下一个站点，此时就没有必要继续试走了，直接换下一个站点。但是这种方法的效率特别低。此外这里使用了循环计数的方法，与数据结构中数组实现的栈是同样的思路
+
+2. 从第一种解法可以看出时间复杂度是O(n^2)，第二种解法的思路是，不去试探某一个站点直到走到终点，因为这种做法不可避免时间复杂度是O(n**2)，而是在一次遍历中计算从开始站点（假设的可能作为开始站点）到某个站点的当前所有剩余的总油量以及从站点0到当前站点的总油量累加起来，如果在这个过程中出现，到达某个站点时的当前总油量小于零说明，从假设的开始站点无法到达该站点，那么从开始站点到当前站点的所有站点都无法作为开始站点，所以将下一个站点重新作为开始站点重新累加当前油量，直到遍历完所有的站点。最后判断总的油量剩余是不是不小于零，如果不小于零说明问题一定有解，这个解就是前面遍历的时候满足偶从那个起始站点到最后一个站点的油量都不小于零。这种做法避免了每次都去试探可能的站点一直走到开始点的那个复杂的过程。
+
+暴力破解：
+
+```cpp
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        const int n = gas.size();
+        
+        for (int i = 0; i < n; i++)
+        {
+            int remain = gas[i];
+            int j = i;
+            // 判断当前的油量是否可以到达下一个加油站
+            while( (remain - cost[j]) >= 0 )
+            {
+                // 因为道路是环装的，所以需要进行循环计数
+                remain = remain - cost[j] + gas[(j+1) % n];
+                j = (j+1) % n;
+                if( i==j ) return i;
+            }
+        }
+        return -1;
+    }
+};
+```
+
+![1570152999262](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570152999262.png)
+
+对于暴力解法的优化,几乎没有提升
+
+```cpp
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        const int n = gas.size();
+        vector<bool> start(n, false);
+        int total = 0;
+        int cost_t = 0;
+
+        for(int i = 0; i < n; i++)
+        {
+            if (gas[i] - cost[i] >= 0) start[i] = true;
+
+            total += gas[i];
+            cost_t += cost[i];
+        }
+        // if (cost_t > total) return -1;
+
+        for (int i = 0; (i < n) && (cost_t <= total); i++)
+        {
+            if (start[i])
+            {
+                int remain = gas[i];
+                int j = i;
+                // 判断当前的油量是否可以到达下一个加油站
+                while( (remain - cost[j]) >= 0 )
+                {
+                    // 因为道路是环装的，所以需要进行循环计数
+                    remain = remain - cost[j] + gas[(j+1) % n];
+                    j = (j+1) % n;
+                    if( i==j ) return i;
+                }
+            }
+        }
+        return -1;
+    }
+};
+```
+
+![1570153778735](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570153778735.png)
+
+解法2代码：
+
+```cpp
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        const int n = gas.size();
+        int total_overage = 0, overage = 0, start = 0;
+
+        for(int i=0; i<n; i++)
+        {
+            total_overage += (gas[i] - cost[i]);
+            overage += (gas[i] - cost[i]);
+
+            if (overage < 0)
+            {
+                start = i+1;
+                overage = 0;
+            }
+        }
+
+        return (total_overage < 0) ? -1 : start;
+    }
+};
+```
+
+
+
+## 135. Candy
+
+题目描述：
+
+![1570157402292](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570157402292.png)
+
+解题思路：
+
+首先定义一个与ratings一样大的数组，并且将里面的值都初始化为1，因为题目中说明每个人至少有一个糖果。然后从数组的左边遍历到右边，如果右边的ratings值比右边的大，则将右边的值在左边值的基础上加1，然后从数组的右边遍历到左边，如果左边的值大于右边的值，那么左边的糖果数量应该大于右边的糖果数量，但是由于之前已经进行了一次从左边到右边的遍历，肯能已经满足了左边大于右边，此时是不需要再加的。所以这里需要取左边这个值与右边这个较小值加一之后的较大者。
+
+```cpp
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        const int n = ratings.size();
+        vector<int> ans(n, 1);
+        for(int i=1; i<n; i++)
+            if(ratings[i] > ratings[i-1]) ans[i] = ans[i-1] + 1;
+        for(int i=n-2; i>=0; i--)
+            if(ratings[i] > ratings[i+1]) ans[i] = max(ans[i], ans[i+1] + 1);
+
+        return accumulate(begin(ans), end(ans), 0);
+    }
+};
+```
+
+这里使用到了C++ 标准库中的accumulate函数，第一个参数是起始位置，第二个参数是终止位置，第三个参数是累加时的初始值。
