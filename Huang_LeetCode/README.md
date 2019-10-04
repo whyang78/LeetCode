@@ -96,7 +96,33 @@ class Solution:
 - 使用正则表达式 ^：匹配字符串开头，[\+\-]：代表一个+字符或-字符，?：前面一个字符可有可无，\d：一个数字，+：前面一个字符的一个或多个，\D：一个非数字字符，*：前面一个字符的0个或多个
 - max(min(数字, 2 ** 31 - 1), -2 ** 31) 用来防止结果越界
 
+10. [Regular Expression Matching](https://leetcode-cn.com/problems/regular-expression-matching/)
+```python
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        if s == p:
+            return True
+        if len(p) > 1 and p[1] == '*':  # 下一个字符为*
+            if s and (s[0] == p[0] or p[0] == '.'):
+                return self.isMatch(s, p[2:]) or self.isMatch(s[1:], p)
+            else:
+                return self.isMatch(s, p[2:])
+        elif s and p and (s[0] == p[0] or p[0] == '.'):
+            return self.isMatch(s[1:], p[1:])
+        return False
+```
+- '.' 匹配任意单个字符, '*' 匹配零个或多个前面的那一个元素
+- 当模式中第二个字符是'*'时：
+    -  如果字符串第一个字符跟模式第一个字符不匹配，则模式后移2个字符，继续匹配。如果字符串第一个字符跟模式第一个字符匹配，可以有3种匹配方式：
+        1. 模式后移2位字符,即模式前两位被忽略（*匹配0个字符）
+        2. 字符串后移1字符,模式不变,*可以匹配多位
+        3. 字符后移1字符,模式后移2字符
+    发现情况3可以被情况1和情况2包含,即执行一次情况2,再执行一次情况1。所以情况3不用判断
+- 当模式中第二个字符不是'*'时:
+    - 如果字符串第一个字符和模式中的第一个字符相匹配,字符串和模式都后移一个字符。
+    - 如果字符串第一个字符和模式中的第一个字符不匹配,直接返回False
 
+ 
 
 15. [3Sum](https://leetcode-cn.com/problems/3sum)
 ```python
@@ -198,6 +224,29 @@ class Solution:
         return -1
 ```
 - 暴力破解,更高效的算法有KMP,Boyer-Mooer算法和Rabin-Karp算法
+
+
+44. [Wildcard Matching](https://leetcode-cn.com/problems/wildcard-matching/)
+```python
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        length = len(s)
+        if len(p) - p.count('*') > length:
+            return False
+        dp = [True] + [False] * length
+        for i in p:
+            if i != '*':
+                for n in reversed(range(length)):
+                    dp[n + 1] = dp[n] and (i == s[n] or i == '?')
+            else:
+                for n in range(1, length + 1):
+                    dp[n] = dp[n - 1] or dp[n]
+            dp[0] = dp[0] and i == '*'
+        return dp[-1]
+```
+- '?' 可以匹配任何单个字符。'*' 可以匹配任意字符串（包括空字符串）。
+
+
 
 67. [Add Binary](https://leetcode-cn.com/problems/add-binary/)
 ```python
