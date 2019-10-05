@@ -122,9 +122,39 @@ class Solution:
     - 如果字符串第一个字符和模式中的第一个字符相匹配,字符串和模式都后移一个字符。
     - 如果字符串第一个字符和模式中的第一个字符不匹配,直接返回False
 
- 
 
-15. [3Sum](https://leetcode-cn.com/problems/3sum)
+
+
+14. [Longest Common Prefix](https://leetcode-cn.com/problems/longest-common-prefix/)
+```python
+class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        r = [len(set(c)) == 1 for c in zip(*strs)] + [0]
+        return strs[0][:r.index(0)] if strs else ''
+```
+- 用set()函数去重判断是否为公共前缀,0作为标志位
+```python
+class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        import os
+        return os.path.commonprefix(strs)
+```
+- os中存在库函数求公共前缀
+```python
+def commonprefix(m):
+    if not m: return ''
+    if not isinstance(m[0], (list, tuple)):
+        m = tuple(map(os.fspath, m))
+    s1 = min(m)
+    s2 = max(m)
+    for i, c in enumerate(s1):
+        if c != s2[i]:
+            return s1[:i]
+    return s1     
+```
+- commonprefix()函数通过max(),min()计算出ascii码最大,最小的字符串进行比较。如果s1和s2有共同前缀,其他字符串都有。如果s1和s2没有,其它有也没用
+
+15.  [3Sum](https://leetcode-cn.com/problems/3sum)
 ```python
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
@@ -246,7 +276,18 @@ class Solution:
 ```
 - '?' 可以匹配任何单个字符。'*' 可以匹配任意字符串（包括空字符串）。
 
-
+65. [Valid Number](https://leetcode-cn.com/problems/valid-number/)
+```python
+class Solution:
+    def isNumber(self, s: str) -> bool:
+        try:
+            float(s)
+        except ValueError:
+            return False
+        else:
+            return True
+```
+66. 
 
 67. [Add Binary](https://leetcode-cn.com/problems/add-binary/)
 ```python
