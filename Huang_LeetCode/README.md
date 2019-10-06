@@ -96,9 +96,114 @@ class Solution:
 - 使用正则表达式 ^：匹配字符串开头，[\+\-]：代表一个+字符或-字符，?：前面一个字符可有可无，\d：一个数字，+：前面一个字符的一个或多个，\D：一个非数字字符，*：前面一个字符的0个或多个
 - max(min(数字, 2 ** 31 - 1), -2 ** 31) 用来防止结果越界
 
+10. [Regular Expression Matching](https://leetcode-cn.com/problems/regular-expression-matching/)
+```python
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        if s == p:
+            return True
+        if len(p) > 1 and p[1] == '*':  # 下一个字符为*
+            if s and (s[0] == p[0] or p[0] == '.'):
+                return self.isMatch(s, p[2:]) or self.isMatch(s[1:], p)
+            else:
+                return self.isMatch(s, p[2:])
+        elif s and p and (s[0] == p[0] or p[0] == '.'):
+            return self.isMatch(s[1:], p[1:])
+        return False
+```
+- '.' 匹配任意单个字符, '*' 匹配零个或多个前面的那一个元素
+- 当模式中第二个字符是'*'时：
+    -  如果字符串第一个字符跟模式第一个字符不匹配，则模式后移2个字符，继续匹配。如果字符串第一个字符跟模式第一个字符匹配，可以有3种匹配方式：
+        1. 模式后移2位字符,即模式前两位被忽略（*匹配0个字符）
+        2. 字符串后移1字符,模式不变,*可以匹配多位
+        3. 字符后移1字符,模式后移2字符
+    发现情况3可以被情况1和情况2包含,即执行一次情况2,再执行一次情况1。所以情况3不用判断
+- 当模式中第二个字符不是'*'时:
+    - 如果字符串第一个字符和模式中的第一个字符相匹配,字符串和模式都后移一个字符。
+    - 如果字符串第一个字符和模式中的第一个字符不匹配,直接返回False
 
 
-15. [3Sum](https://leetcode-cn.com/problems/3sum)
+12. [Integer to Roman](https://leetcode-cn.com/problems/integer-to-roman/)
+```python
+# 字符          数值
+# I             1
+# V             5
+# X             10
+# L             50
+# C             100
+# D             500
+# M             1000
+
+class Solution:
+    def intToRoman(self, num: int) -> str:
+        M = ["", "M", "MM", "MMM"] #[0,1000,2000,3000]
+        C = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"] # [0,100,200,300,400,500,600,700,800,900]
+        X = ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"] # [0,10,20,30,40,50,60,70,80,90]
+        I = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"] # [0,1,2,3,4,5,6,7,8,9]
+
+        return M[num // 1000] + C[(num % 1000) // 100] + X[(num % 100) //
+                                                           10] + I[num % 10]
+```
+- 
+
+13. [Roman to Integer](https://leetcode-cn.com/problems/roman-to-integer/?utm_source=LCUS&utm_medium=ip_redirect_q_uns&utm_campaign=transfer2china)
+```python
+class Solution:
+    def romanToInt(self, s: str) -> int:
+        d = {
+            'I': 1,
+            'IV': 3,
+            'V': 5,
+            'IX': 8,
+            'X': 10,
+            'XL': 30,
+            'L': 50,
+            'XC': 80,
+            'C': 100,
+            'CD': 300,
+            'D': 500,
+            'CM': 800,
+            'M': 1000
+        }
+        r = d[s[0]]
+        for i in range(1, len(s)):
+            r += d.get(s[i - 1:i + 1], d[s[i]])
+        return r
+```
+- 构建一个字典记录所有罗马数字子串,长度为2的子串记录的值(实际值-子串左边的罗马数字的值)
+- 遍历s,判断当前位置和前一个位置是否在字典内,如果在就记录值,不在就直接记录当前位置字符对应值
+- 例如CD为400,先遍历到C记录为100,在遍历到CD,记录为300。相加,正好为正确值400
+
+14. [Longest Common Prefix](https://leetcode-cn.com/problems/longest-common-prefix/)
+```python
+class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        r = [len(set(c)) == 1 for c in zip(*strs)] + [0]
+        return strs[0][:r.index(0)] if strs else ''
+```
+- 用set()函数去重判断是否为公共前缀,0作为标志位
+```python
+class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        import os
+        return os.path.commonprefix(strs)
+```
+- os中存在库函数求公共前缀
+```python
+def commonprefix(m):
+    if not m: return ''
+    if not isinstance(m[0], (list, tuple)):
+        m = tuple(map(os.fspath, m))
+    s1 = min(m)
+    s2 = max(m)
+    for i, c in enumerate(s1):
+        if c != s2[i]:
+            return s1[:i]
+    return s1     
+```
+- commonprefix()函数通过max(),min()计算出ascii码最大,最小的字符串进行比较。如果s1和s2有共同前缀,其他字符串都有。如果s1和s2没有,其它有也没用
+
+15.  [3Sum](https://leetcode-cn.com/problems/3sum)
 ```python
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
@@ -198,6 +303,40 @@ class Solution:
         return -1
 ```
 - 暴力破解,更高效的算法有KMP,Boyer-Mooer算法和Rabin-Karp算法
+
+
+44. [Wildcard Matching](https://leetcode-cn.com/problems/wildcard-matching/)
+```python
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        length = len(s)
+        if len(p) - p.count('*') > length:
+            return False
+        dp = [True] + [False] * length
+        for i in p:
+            if i != '*':
+                for n in reversed(range(length)):
+                    dp[n + 1] = dp[n] and (i == s[n] or i == '?')
+            else:
+                for n in range(1, length + 1):
+                    dp[n] = dp[n - 1] or dp[n]
+            dp[0] = dp[0] and i == '*'
+        return dp[-1]
+```
+- '?' 可以匹配任何单个字符。'*' 可以匹配任意字符串（包括空字符串）。
+
+65. [Valid Number](https://leetcode-cn.com/problems/valid-number/)
+```python
+class Solution:
+    def isNumber(self, s: str) -> bool:
+        try:
+            float(s)
+        except ValueError:
+            return False
+        else:
+            return True
+```
+66. 
 
 67. [Add Binary](https://leetcode-cn.com/problems/add-binary/)
 ```python
