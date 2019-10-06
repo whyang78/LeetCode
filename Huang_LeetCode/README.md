@@ -123,7 +123,56 @@ class Solution:
     - 如果字符串第一个字符和模式中的第一个字符不匹配,直接返回False
 
 
+12. [Integer to Roman](https://leetcode-cn.com/problems/integer-to-roman/)
+```python
+# 字符          数值
+# I             1
+# V             5
+# X             10
+# L             50
+# C             100
+# D             500
+# M             1000
 
+class Solution:
+    def intToRoman(self, num: int) -> str:
+        M = ["", "M", "MM", "MMM"] #[0,1000,2000,3000]
+        C = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"] # [0,100,200,300,400,500,600,700,800,900]
+        X = ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"] # [0,10,20,30,40,50,60,70,80,90]
+        I = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"] # [0,1,2,3,4,5,6,7,8,9]
+
+        return M[num // 1000] + C[(num % 1000) // 100] + X[(num % 100) //
+                                                           10] + I[num % 10]
+```
+- 
+
+13. [Roman to Integer](https://leetcode-cn.com/problems/roman-to-integer/?utm_source=LCUS&utm_medium=ip_redirect_q_uns&utm_campaign=transfer2china)
+```python
+class Solution:
+    def romanToInt(self, s: str) -> int:
+        d = {
+            'I': 1,
+            'IV': 3,
+            'V': 5,
+            'IX': 8,
+            'X': 10,
+            'XL': 30,
+            'L': 50,
+            'XC': 80,
+            'C': 100,
+            'CD': 300,
+            'D': 500,
+            'CM': 800,
+            'M': 1000
+        }
+        r = d[s[0]]
+        for i in range(1, len(s)):
+            r += d.get(s[i - 1:i + 1], d[s[i]])
+        return r
+```
+- 构建一个字典记录所有罗马数字子串,长度为2的子串记录的值(实际值-子串左边的罗马数字的值)
+- 遍历s,判断当前位置和前一个位置是否在字典内,如果在就记录值,不在就直接记录当前位置字符对应值
+- 例如CD为400,先遍历到C记录为100,在遍历到CD,记录为300。相加,正好为正确值400
 
 14. [Longest Common Prefix](https://leetcode-cn.com/problems/longest-common-prefix/)
 ```python
