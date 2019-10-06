@@ -1,8 +1,4 @@
-## Rotate Image
-
-You are given an n × n 2D matrix representing an image.
-Rotate the image by 90 degrees (clockwise).
-Follow up: Could you do this in-place? 
+## 48 Rotate Image（旋转图像）
 
 给定一个 *n* × *n* 的二维矩阵表示一个图像。
 
@@ -10,7 +6,7 @@ Follow up: Could you do this in-place?
 
 ## A
 
-对角线转，上下翻转
+### 顺时针旋转 90 度：相当于 先副对角线转，再上下翻转
 
 ![1569409929494](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1569409929494.png)
 
@@ -30,6 +26,32 @@ public:
             }
         }
     }
+};
+```
+
+
+
+### 逆时针旋转 90 度：相当于 先主对角线转，再上下翻转
+
+
+
+```C++
+//逆时针旋转图像90度
+class Solution {
+public:
+	void rotate_2(vector<vector<int>>& matrix) {
+		int wide = matrix.size();
+		for (int i = 0; i < wide; ++i) {
+			for (int j = 0; j < wide - i; ++j) {
+				swap(matrix[j][wide - 1 - i], matrix[wide - 1 - i][j]);
+			}
+		}
+		for (int i = 0; i < wide / 2; ++i) {
+			for (int j = 0; j < wide; ++j) {
+				swap(matrix[wide - 1 - i][j], matrix[i][j]);
+			}
+		}
+	}
 };
 ```
 

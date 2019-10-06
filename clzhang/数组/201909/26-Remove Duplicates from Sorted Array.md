@@ -1,12 +1,20 @@
-# 数组1
+## 26 Remove Duplicates from Sorted Array（删除排序数组中的重复项）
 
-## Question:  Remove Duplicates from Sorted Array
+给定一个排序数组，你需要在原地删除重复出现的元素，使得每个元素只出现一次，返回移除后数组的新长度。
 
-Given a sorted array, remove the duplicates in place such that each element appear only once
-and return the new length.
-Do not allocate extra space for another array, you must do this in place with constant memory.
-For example, Given input array A = [1,1,2],
-Your function should return length = 2, and A is now [1,2] .
+不要使用额外的数组空间，你必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成。
+
+**示例 1:**
+
+```
+给定 nums = [1,1,1,2,2,3],
+
+函数应返回新长度 length = 5, 并且原数组的前五个元素被修改为 1, 1, 2, 2, 3 。
+
+你不需要考虑数组中超出新长度后面的元素。
+```
+
+排序数组，从头往后，若当前元素与前面相同，重复了，则不保存。
 
 ```c++
 //2019/0916

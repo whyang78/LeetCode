@@ -1,37 +1,31 @@
-## Question: Set Matrix Zeroes 
-
-Given a m × n matrix, if an element is 0, set its entire row and column to 0. Do it in place.
-Follow up: Did you use extra space?
-A straight forward solution using O(mn) space is probably a bad idea.
-A simple improvement uses O(m + n) space, but still not the best solution.
-Could you devise a constant space solution? 
+## 73 Set Matrix Zeroes （矩阵置零）
 
 给定一个 m x n 的矩阵，如果一个元素为 0，则将其所在行和列的所有元素都设为 0。请使用原地算法。
 
-示例 1:
+**示例 1:**
 
+```
 输入: 
-[[1,1,1],
-  [1,0,1],
-  [1,1,1]]
+[
+  [1,1,1],
+  [1,0,1],
+  [1,1,1]
+]
 输出: 
-[[1,0,1],
-  [0,0,0],
-  [1,0,1]]
-示例 2:
-
-输入: 
-[[0,1,2,0],
-  [3,4,5,2],
-  [1,3,1,5]]
-输出: 
-[[0,0,0,0],
-  [0,4,5,0],
-  [0,3,1,0]]
+[
+  [1,0,1],
+  [0,0,0],
+  [1,0,1]
+]
+```
 
 ## A
 
-遍历M*N，记录要删的行、列，需要额外的空间：（M + N），时间复杂度
+遍历M*N，记录要删的行、列，需要额外的空间：
+$$
+\mathcal{O}（M + N）
+$$
+时间复杂度：
 $$
 \mathcal{O}(MN)
 $$

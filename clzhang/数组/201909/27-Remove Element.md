@@ -1,7 +1,4 @@
-## Question: Remove Element
-
-Given an array and a value, remove all instances of that value in place and return the new length.
-The order of elements can be changed. It doesn’t matter what you leave beyond the new length. 
+## 27 Remove Element（移除元素）
 
 给定一个数组 nums 和一个值 val，你需要原地移除所有数值等于 val 的元素，返回移除后数组的新长度。
 
