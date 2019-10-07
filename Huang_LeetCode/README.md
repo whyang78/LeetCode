@@ -304,6 +304,18 @@ class Solution:
 ```
 - 暴力破解,更高效的算法有KMP,Boyer-Mooer算法和Rabin-Karp算法
 
+38. [Count and Say](https://leetcode-cn.com/problems/count-and-say/)
+```python
+class Solution:
+    def countAndSay(self, n: int) -> str:
+        return '1' * (n is 1) or re.sub(
+            r'(.)\1*', lambda m: str(len(m.group())) + m.group(1),
+            self.countAndSay(n - 1))
+```
+- re.sub(正则,替换字符串或函数,被替换字符串,是否区分大小写)
+- '.'可匹配任意一个除了'\n'的字符。(.) 匹配任意一个除了\n的字符并把这个匹配结果放进第一组。(.)\1 匹配一个任意字符的二次重复并把那个字符放入数组。(.)\1* 匹配一个任意字符的多次重复并把那个字符放入数组
+- group(default=0)可以取匹配文本。group(1)取第一个括号内的文本
+
 
 44. [Wildcard Matching](https://leetcode-cn.com/problems/wildcard-matching/)
 ```python
@@ -363,6 +375,23 @@ class Solution:
 
 ```
 - 模拟二进制加法
+
+71. [Simplify Path](https://leetcode-cn.com/problems/simplify-path/)
+```python
+class Solution:
+    def simplifyPath(self, path: str) -> str:
+        stack = []
+        for token in path.split('/'):
+            if token in ('', '.'):
+                pass
+            elif token == '..':
+                if stack:
+                    stack.pop()
+            else:
+                stack.append(token)
+        return '/' + '/'.join(stack)
+```
+
 
 80. [Remove Duplicates from Sorted Array II](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii)
 - 加入一个变量记录元素出现次数
