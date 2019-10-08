@@ -28,7 +28,7 @@ def nextPermutation(nums: list):
 """
 def nextPermutation(nums: list):
     length = len(nums)
-    for i in range():
+    for i in range(length-1, 0, -1):  # 将步长改为-1即可从右往左开始遍历
         if nums[i] < nums[i+1]:
             for j in range():
                 if nums[j] > nums[i]:
