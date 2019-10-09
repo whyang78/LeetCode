@@ -382,6 +382,24 @@ class Solution:
                     break
 ```
 
+32. [Longest Valid Parentheses](https://leetcode-cn.com/problems/longest-valid-parentheses/)
+```python
+class Solution:
+    def longestValidParentheses(self, s: str) -> int:
+        maxLength = 0
+        stack = [-1]
+
+        for k, ch in enumerate(s):
+            if ch == '(':
+                stack.append(k)
+            else:
+                stack.pop()
+                if stack:
+                    maxLength = max(maxLength, k - stack[-1])
+                else:
+                    stack.append(k)
+        return maxLength
+```
 33. [Search in Rotated Sorted Array](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/)
 ```python
 class Solution:
@@ -717,6 +735,23 @@ class Solution:
             prev = prev.next
         return head
 ```
+84. [Largest Rectangle in Histogram](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)
+```python
+class Solution:
+    def largestRectangleArea(self, heights):
+        heights.append(0)
+        stack = [-1]
+        ans = 0
+        for k, height in enumerate(heights):
+            while height < heights[stack[-1]]:
+                h = heights[stack.pop()]
+                w = k - stack[-1] - 1
+                ans = max(ans, h * w)
+            stack.append(k)
+        heights.pop()
+        return ans
+```
+
 
 86. [Partition List](https://leetcode-cn.com/problems/partition-list/)
 ```python
