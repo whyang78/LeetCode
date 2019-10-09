@@ -205,3 +205,108 @@ public:
 };
 ```
 
+
+
+## 92. Reverse Linked List II
+
+题目描述：
+
+![1570631927562](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570631927562.png)
+
+解题思路：
+
+![1570631970675](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570631970675.png)
+
+```cpp
+class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int m, int n) {
+        if( !head || !head->next || m == n) return head;
+        
+        auto dummy = new ListNode(-1);
+        dummy->next = head;
+        
+        auto a = dummy, d = dummy;
+        for (int i = 0; i < m - 1; i++) a = a->next;
+        for (int i = 0; i < n; i++) d = d->next;
+        
+        auto b = a->next, c = d->next; 
+        for (auto p = b, q = b->next; q != c;)
+        {
+            auto o = q->next;
+            q->next = p;
+            p = q, q = o;
+        }
+        
+        a->next = d;
+        b->next = c;
+        
+        return dummy->next;
+    }
+};
+```
+
+代码优化：只遍历一次O(n)
+
+```cpp
+class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int m, int n) {
+        if( !head || !head->next || m == n) return head;
+        
+        auto dummy = new ListNode(-1);
+        dummy->next = head;
+        
+        auto p = dummy;
+        for (int i = 0; i < m -1; i++) p = p->next;
+        
+        auto a = p, b = a->next, c = b->next;
+        for (int i = m + 1; i <= n; i++)
+        {
+            auto d = c->next;
+            c->next = b;
+            b = c, c = d;
+        }
+        
+        a->next->next = c;
+        a->next = b;
+        
+        return dummy->next;
+    }
+};
+```
+
+
+
+## 160. Intersection of two Linked List
+
+题目描述：
+
+![1570633586948](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570633586948.png)
+
+![1570633601779](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570633601779.png)
+
+解题思路：
+
+![1570633657089](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570633657089.png)
+
+```cpp
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        auto p = headA, q = headB;
+        
+        while( p != q )
+        {
+            if ( p ) p = p->next;
+            else p = headB;
+            
+            if ( q ) q = q->next;
+            else q = headA;
+        }            
+        
+        return p;
+    }
+};
+```
+
