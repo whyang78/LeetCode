@@ -11,7 +11,7 @@
 
 迭代法
 
-![webwxgetmsgimg](C:\Users\Administrator.PC-20190621JALE\Downloads\webwxgetmsgimg.jpg)
+![Image text](C:\Users\Administrator.PC-20190621JALE\Downloads\webwxgetmsgimg.jpg)
 
 ```C++
 /**
