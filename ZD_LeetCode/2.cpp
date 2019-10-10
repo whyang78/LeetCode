@@ -9,31 +9,21 @@
 class Solution {
 public:
     ListNode* addTwoNumbers(ListNode* a, ListNode* b) {
-        long i = 1, j = 1;
-        int a_num = a->val, b_num = b->val;
-        while (a->next || b->next) {
-            if (a->next) {
-                i *= 10;
-                a = a->next;
-                a_num += i * a->val;
-            }
-            if (b->next) {
-                j *= 10;
-                b = b->next;
-                b_num += j * b->val;
-            }  
+        ListNode* R = new ListNode(-1);
+        ListNode* T = R;
+        int carry = 0;
+        while (a || b) {
+            int ai = a == 0 ? 0 : a->val;
+            int bi = b == 0 ? 0 : b->val;
+            int val = (ai + bi + carry) % 10;
+            carry = (ai + bi + carry) / 10;
+            a = a == 0 ? 0 : a->next;
+            b = b == 0 ? 0 : b->next;
+            T->next = new ListNode(val);
+            T = T->next;
         }
-        int c = a_num + b_num;
-        ListNode* p = new ListNode(-1);
-        ListNode* q = p;
-        while (c) {
-            int t = c % 10;
-            c = c / 10;
-            p->next = new ListNode(t);  //β�巨
-            p = p->next;
-        }
-        if (!q->next)
-            q->next = new ListNode(0);
-        return q->next;
+        if (carry > 0)
+            T->next = new ListNode(carry);
+        return R->next;
     }
 };
