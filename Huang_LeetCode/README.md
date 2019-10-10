@@ -811,6 +811,9 @@ class Solution:
         return dummyNode.next
 ```
 
+
+
+
 125. [Valid Palindrome](https://leetcode-cn.com/problems/valid-palindrome/)
 ```python
 class Solution:
@@ -1038,7 +1041,30 @@ class Solution:
         head = self._mergeLists(a, b)
 ```
 
-146. [LRU Cache](https://leetcode-cn.com/problems/lru-cache/)
+144. [Binary Tree Preorder Traversal](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+```python
+def preorderTraversal(self, root):
+    ret = []
+    stack = [root]
+    while stack:
+        node = stack.pop()
+        if node:
+            ret.append(node.val)
+            stack.append(node.right)
+            stack.append(node.left)
+    return ret
+```
+- 用栈模拟递归
+```python
+class Solution:
+    def preorderTraversal(self, root: TreeNode) -> List[int]:
+        return root and sum(
+            ([root.val],
+             *map(self.preorderTraversal, [root.left, root.right])), []) or []
+```
+- 使用map对左右孩子分别调用,sum对list进行相加操作
+
+1.   [LRU Cache](https://leetcode-cn.com/problems/lru-cache/)
 ```python
 class LRUCache:
     def __init__(self, capacity: int):
@@ -1058,10 +1084,32 @@ class LRUCache:
         self.od[key] = value
 ```
 
+1.   [Evaluate Reverse Polish Notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
+```python
+class Solution:
+    def evalRPN(self, tokens: List[str]) -> int:
+        stack = []
+        for k, v in enumerate(tokens):
+            if v in '+-*/':
+                b, a = stack.pop(), stack.pop()
+                v = eval('a' + v + 'b')
+            stack.append(int(v))
+        return stack.pop()
+```
+- 用栈模拟求解步骤
+```python
+class Solution:
+    def evalRPN(self, tokens: List[str]) -> int:
+        t, f = tokens.pop(), self.evalRPN
+        if t in '+-*/':
+            b, a = f(tokens), f(tokens)
+            t = eval('a' + t + 'b')
+        return int(t)
+```
+- 递归地返回左右表达式操作后结果。eval 函数将字符串看作代码得到输出值
 
 
-
-167.   [Two Sum II - Input array is sorted](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
+1.     [Two Sum II - Input array is sorted](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
 ```python
 class Solution:
     def twoSum(self, numbers: List[int], target: int) -> List[int]:
@@ -1075,7 +1123,7 @@ class Solution:
 
 ```
 
-561.   [Array Partition I](https://leetcode-cn.com/problems/array-partition-i/)
+1.     [Array Partition I](https://leetcode-cn.com/problems/array-partition-i/)
 ```python
 class Solution:
     def arrayPairSum(self, nums: List[int]) -> int:
