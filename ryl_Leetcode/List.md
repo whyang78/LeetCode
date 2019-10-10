@@ -310,3 +310,124 @@ public:
 };
 ```
 
+
+
+## 86. Partition List
+
+题目描述：
+
+![1570715364532](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570715364532.png)
+
+解题思路：
+
+使用两个链表分别记录比输入的x小的元素以及大于等于x的元素。最后将较小的那个链表接在较大值链表的后面
+
+```cpp
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        ListNode* left = new ListNode(-1);
+        ListNode* right = new ListNode(-1);
+        
+        ListNode *pl = left, *pr = right;
+        for (ListNode *p = head; p; p = p->next)
+            if (p->val < x)
+            {
+                pl->next = p;
+                pl = pl->next;
+            }
+            else
+            {
+                pr->next = p;
+                pr = pr->next;
+            }
+        
+        pl->next = right->next;
+        pr->next = NULL;
+        
+        return left->next;
+    }
+};
+```
+
+
+
+## 142. Linked List Cycle II
+
+题目描述：
+
+![1570715872022](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570715872022.png)
+
+解题思路：
+
+![1570717818692](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570717818692.png)
+
+这道题有一种非常巧妙的做法，也是使用快慢指针，首先让快指针与慢指针同时往后分别走两步和一步，当
+
+快慢指针相遇之后，让满指针回到起点，快慢指针同时一起每次往后移动一步，直到快慢指针相遇的时候，相遇点就是环的入口
+
+```cpp
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        auto fast = head, slow = head;
+        
+        while(fast && slow)
+        {
+            fast = fast->next;
+            slow = slow->next;
+            if (fast) fast = fast->next;
+            else break;
+            
+            if (fast == slow)
+            {
+                slow = head;
+                
+                while (fast != slow)
+                {
+                    fast = fast->next;
+                    slow = slow->next;
+                }
+                
+                if (fast == slow) return fast;
+            }
+        }
+        
+        return NULL;
+    }
+};
+```
+
+## 82. Remove Duplicates from Sorted List II 
+
+题目描述：
+
+![1570720586336](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570720586336.png)
+
+解题思路：
+
+```cpp
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if (!head || !head->next) return head;
+        
+        auto dummy = new ListNode(-1);
+        dummy->next = head;
+
+        auto p = dummy, q = head;
+        
+        while ( q )
+        {
+            while ( q->next && q->val == q->next->val) q = q->next;
+            if ( p->next == q) p = q;
+            else p->next = q->next;
+            
+            q = q->next;
+        }
+        
+        return dummy->next;
+    }
+};
+```
+
