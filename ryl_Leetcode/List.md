@@ -350,7 +350,37 @@ public:
 };
 ```
 
+## 141. Linked List Cycle
 
+题目描述：
+
+![1570795330788](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570795330788.png)
+
+解题思路：
+
+使用快慢指针，快指针每次走两步，满指针每次走一步，如果快慢指针能够相遇，则说明链表有环
+
+```cpp
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        if ( !head || !head->next ) return false;
+        
+        auto fast = head, slow = head;
+        
+        while( fast && fast->next )
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+            
+            if ( fast == slow ) return true;
+        }
+        
+        return false;
+    }
+};
+
+```
 
 ## 142. Linked List Cycle II
 
@@ -426,6 +456,37 @@ public:
             q = q->next;
         }
         
+        return dummy->next;
+    }
+};
+```
+
+## 19. Remove Nth Node From End of List
+
+题目描述：
+
+![1570795495462](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570795495462.png)
+
+解题思路：
+
+使用快慢指针，先让快指针走N步，然后慢指针（在dummy处）与快指针同时往后走一步，直到快指针的next为空，则慢指针所对应的就是倒数第N个节点的上一个节点，因为快慢指针之间相差N个节点
+
+```cpp
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        auto dummy = new ListNode(-1);
+        dummy->next = head;
+        auto fast = dummy, slow = dummy;
+        while (n--) fast = fast->next;
+        
+        while(fast->next)
+        {
+            fast = fast->next;
+            slow = slow->next;
+        }
+        
+        slow->next = slow->next->next;
         return dummy->next;
     }
 };
