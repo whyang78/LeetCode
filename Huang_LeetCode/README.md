@@ -828,9 +828,32 @@ class Solution:
                 root = root.right
         return r
 ```
+102. [Binary Tree Level Order Traversal](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
+```python
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+
+        ans, level = [], [root]
+        while root and level:
+            ans.append([node.val for node in level])
+            level = [kid for n in level for kid in (n.left, n.right) if kid]
+        return ans
+```
+
+1.   [Binary Tree Level Order Traversal II](https://leetcode-cn.com/problems/binary-tree-level-order-traversal-ii/)
+```python
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+
+        ans, level = [], [root]
+        while root and level:
+            ans.append([node.val for node in level])
+            level = [kid for n in level for kid in (n.left, n.right) if kid]
+        return ans[::-1]
+```
 
 
-125. [Valid Palindrome](https://leetcode-cn.com/problems/valid-palindrome/)
+1.   [Valid Palindrome](https://leetcode-cn.com/problems/valid-palindrome/)
 ```python
 class Solution:
     def isPalindrome(self, s: str) -> bool:
@@ -847,7 +870,7 @@ class Solution:
         return True
 ```
 
-128. [Longest Consecutive Sequence](https://leetcode-cn.com/problems/longest-consecutive-sequence/)
+1.   [Longest Consecutive Sequence](https://leetcode-cn.com/problems/longest-consecutive-sequence/)
 ```python
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
@@ -869,7 +892,7 @@ class Solution:
         return longest
 ```
 
-134. [Gas Station](https://leetcode-cn.com/problems/gas-station/)
+1.   [Gas Station](https://leetcode-cn.com/problems/gas-station/)
 ```python
 class Solution:
     def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
@@ -886,7 +909,7 @@ class Solution:
 ```
 
 
-135. [Candy](https://leetcode-cn.com/problems/candy/)
+1.   [Candy](https://leetcode-cn.com/problems/candy/)
 ```python
 class Solution:
     def candy(self, ratings: List[int]) -> int:
@@ -905,7 +928,7 @@ class Solution:
         return sum(res)
 ```
 
-136. [Single Number](https://leetcode-cn.com/problems/single-number/submissions/)
+1.   [Single Number](https://leetcode-cn.com/problems/single-number/submissions/)
 ```python
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:
@@ -915,7 +938,7 @@ class Solution:
         return x
 ```
 
-137. [Single Number II](https://leetcode-cn.com/problems/single-number-ii/)
+1.   [Single Number II](https://leetcode-cn.com/problems/single-number-ii/)
 ```python
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:
@@ -924,7 +947,7 @@ class Solution:
 
 
 
-138. [Copy List with Random Pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)
+1.   [Copy List with Random Pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)
 ```python
 class Solution:
     def copyRandomList(self, head: 'Node') -> 'Node':
@@ -944,7 +967,7 @@ class Solution:
      2. 或者通过在原链表上添加节点,最后拆分的方法完成题目要求
    
 
-141. [Linked List Cycle](https://leetcode-cn.com/problems/linked-list-cycle/)
+1.   [Linked List Cycle](https://leetcode-cn.com/problems/linked-list-cycle/)
 ```python
 class Solution(object):
     def hasCycle(self, head):
@@ -969,7 +992,7 @@ class Solution(object):
 
         return head != None
 ```
-142. [Linked List Cycle II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
+1.   [Linked List Cycle II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
 ```python
 class Solution(object):
     def detectCycle(self, head):
@@ -1002,7 +1025,7 @@ class Solution(object):
 ```
 - 设环的起始节点为 E，快慢指针从 head 出发，快指针速度为 2，设相交节点为 X，head 到 E 的距离为 H，E 到 X 的距离为 D，环的长度为 L，那么有：快指针走过的距离等于慢指针走过的距离加快指针多走的距离（多走了 n 圈的 L） 2(H + D) = H + D + nL，因此可以推出 H = nL - D，这意味着如果我们让俩个慢指针一个从 head 出发，一个从 X 出发的话，他们一定会在节点 E 相遇
 
-143. [Reorder List](https://leetcode-cn.com/problems/reorder-list/)
+1.   [Reorder List](https://leetcode-cn.com/problems/reorder-list/)
 ```python
 class Solution:
     def _splitList(self, head):
@@ -1057,7 +1080,7 @@ class Solution:
         head = self._mergeLists(a, b)
 ```
 
-144. [Binary Tree Preorder Traversal](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+1.   [Binary Tree Preorder Traversal](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 ```python
 def preorderTraversal(self, root):
     ret = []
@@ -1081,7 +1104,7 @@ class Solution:
 - 使用map对左右孩子分别调用,sum对list进行相加操作
 
 
-145. [Binary Tree Postorder Traversal](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
+1.   [Binary Tree Postorder Traversal](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
 ```python
 class Solution:
     def postorderTraversal(self, root: TreeNode) -> List[int]:
@@ -1093,7 +1116,7 @@ class Solution:
             stack += root.right and [root.right] or []
         return r[::-1]
 ```
-146.   [LRU Cache](https://leetcode-cn.com/problems/lru-cache/)
+1.     [LRU Cache](https://leetcode-cn.com/problems/lru-cache/)
 ```python
 class LRUCache:
     def __init__(self, capacity: int):
@@ -1113,7 +1136,7 @@ class LRUCache:
         self.od[key] = value
 ```
 
-150.   [Evaluate Reverse Polish Notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
+1.     [Evaluate Reverse Polish Notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
 ```python
 class Solution:
     def evalRPN(self, tokens: List[str]) -> int:
@@ -1138,7 +1161,7 @@ class Solution:
 - 递归地返回左右表达式操作后结果。eval 函数将字符串看作代码得到输出值
 
 
-167. [Two Sum II - Input array is sorted](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
+1.   [Two Sum II - Input array is sorted](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
 ```python
 class Solution:
     def twoSum(self, numbers: List[int], target: int) -> List[int]:
@@ -1152,7 +1175,7 @@ class Solution:
 
 ```
 
-561. [Array Partition I](https://leetcode-cn.com/problems/array-partition-i/)
+1.   [Array Partition I](https://leetcode-cn.com/problems/array-partition-i/)
 ```python
 class Solution:
     def arrayPairSum(self, nums: List[int]) -> int:
