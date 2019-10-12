@@ -492,3 +492,72 @@ public:
 };
 ```
 
+## 234Palindrome Linked List
+
+题目描述：
+
+![1570805038109](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570805038109.png)
+
+解题思路：
+
+1. 比较好理解的类似于括号匹配，使用栈
+
+```cpp
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {        
+        vector<int> stack;
+        
+        auto fast = head, slow = head;
+        
+        while(fast && fast->next)
+        {
+            stack.push_back(slow->val);
+            slow = slow->next;
+            
+            fast = fast->next->next;
+        }
+        
+        if (fast) slow = slow->next;
+        
+        while(slow)
+        {
+            int top = stack.back();
+            stack.pop_back();
+            if (top != slow->val) return false;
+            
+            slow = slow->next;
+        }
+        
+        return stack.empty();
+        
+    }
+};
+```
+
+## 876. Middle of the Linked List
+
+![1570893220251](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570893220251.png)
+
+解题思路：
+
+1. 使用快慢指针，快指针每次走两步，满指针每次走一步。所以快指针走的路程是满指针的两倍，当快指针到达最后一个点的时候，如果是链表元素是奇数个的时候，满指针走到了最中间一个点。如果链表中的元素个数是偶数个的话，当fast->next == NULL的时候，此时满指针指向的是中间靠后面一个点。也就是满足题意的。
+
+```cpp
+class Solution {
+public:
+    ListNode* middleNode(ListNode* head) {
+        auto fast = head, slow = head;
+        
+        while( fast && fast->next )
+        {
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+ 
+        slow = slow;
+        return slow;
+    }
+};
+```
+
