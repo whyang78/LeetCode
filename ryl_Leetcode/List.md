@@ -10,29 +10,26 @@
 
 1. 分别定义一个头指针head，和用来做链表移动的指针cur, 让后在定义一个进位标志变量plus。从题意可以看出当前节点的值等于进位变量plus在分别加上两个链表所对应的元素的值，但是需要注意的是两个链表可能长度不一样。还有一个地方需要注意的是，当最后两个链表的值相加刚好有进位的时候，不要忘记把他加在链表的后面,但是这种效率不是很高。
 
-
-
 ```cpp
 class Solution {
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode* head = new ListNode(0);
-        ListNode* cur = head;
-        int plus = 0;
-        while(l1 || l2)
+        auto ans = new ListNode(-1), cur = ans;
+        
+        int carry = 0;
+        while(l1 || l2 || carry)
         {
-            int sum = (l1 ? l1->val : 0) + (l2 ? l2->val : 0) + plus;
-            int num = sum % 10;
-            plus = sum / 10;
+            int twoSum = (l1 ? l1->val : 0) + (l2 ? l2->val : 0) + carry;
+            carry = twoSum >= 10 ? 1 : 0;
             
-            cur->next = new ListNode(num);
+            cur->next = new ListNode(twoSum % 10);
             cur = cur->next;
             
-            if(l1) l1 = l1->next;
-            if(l2) l2 = l2->next;
+            l1 = l1 ? l1->next : l1;
+            l2 = l2 ? l2->next : l2;
         }
-        if(plus > 0) cur->next = new ListNode(1);
-        return head->next;
+                
+        return ans->next;
     }
 };
 ```
@@ -147,28 +144,29 @@ public:
 class Solution {
 public:
     ListNode* rotateRight(ListNode* head, int k) {
-        if( !head || !head->next) return head; 
-            
+        if ( !head || !head->next || k == 0) return head;
+        auto dummy  = new ListNode(-1); 
+        dummy->next = head;
+        
+        auto p = dummy;
         int len = 0;
-        for (auto p = head; p; p = p->next) len++;
-        k %= len;
+        for (auto p = dummy; p->next; p = p->next) len++; 
         
-        auto first = head;
-        auto second = head;
+        k = k % len;
         
+        auto first = dummy, second = dummy;
         while( k-- ) first = first->next;
-        
-        while(first->next) 
+        while( first->next )
         {
             first = first->next;
-            second = second->next;    
+            second = second->next;
         }
         
-        first->next = head;
-        head = second->next;
+        first->next = dummy->next;
+        dummy->next = second->next;
         second->next = NULL;
         
-        return head;
+        return dummy->next;
     }
 };
 ```
@@ -469,7 +467,7 @@ public:
 
 解题思路：
 
-使用快慢指针，先让快指针走N步，然后慢指针（在dummy处）与快指针同时往后走一步，直到快指针的next为空，则慢指针所对应的就是倒数第N个节点的上一个节点，因为快慢指针之间相差N个节点
+使用前后指针，先让前指针走N步，然后后指针（在dummy处）与前指针同时往后走一步，直到前指针的next为空，则后指针所对应的就是倒数第N个节点的上一个节点，因为前后指针之间始终保持相差N个节点
 
 ```cpp
 class Solution {
@@ -477,16 +475,16 @@ public:
     ListNode* removeNthFromEnd(ListNode* head, int n) {
         auto dummy = new ListNode(-1);
         dummy->next = head;
-        auto fast = dummy, slow = dummy;
-        while (n--) fast = fast->next;
+        auto first = dummy, second = dummy;
         
-        while(fast->next)
+        while (n--) first = first->next;
+        while (first->next) 
         {
-            fast = fast->next;
-            slow = slow->next;
+            first = first->next;
+            second = second->next;
         }
         
-        slow->next = slow->next->next;
+        second->next = second->next->next;
         return dummy->next;
     }
 };
@@ -557,6 +555,66 @@ public:
  
         slow = slow;
         return slow;
+    }
+};
+```
+
+
+
+## 21. Merge Two Sorted Lists
+
+![1570943727551](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1570943727551.png)a
+
+解题思路：
+
+1. 归并排序中的归并操作，也需要开辟一个新的链表。
+2. 使用递归的思路，让值小的节点作为头节点，然后将其出了最小节点以外的链表于另一个链表进行merge
+
+```cpp
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode dummy(0);
+        ListNode* cur = &dummy;
+        
+        while( l1 && l2)
+        {
+            if (l1->val <= l2->val) 
+            {
+                cur->next = l1;
+                l1 = l1->next;
+            }
+            else
+            {
+                cur->next = l2;
+                l2 = l2->next;
+            }
+            cur = cur->next;
+        }
+        
+        cur->next = l1 ? l1 : l2; 
+        
+        return dummy.next;
+    }
+};
+```
+
+```cpp
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        if (!l1 || !l2) return l1 ? l1 : l2;
+        
+        if (l1->val <= l2->val) 
+        {
+            l1->next = mergeTwoLists(l1->next, l2);
+            return l1;
+        }
+        else 
+        {
+            l2->next = mergeTwoLists(l1, l2->next);
+            return l2;
+        }
     }
 };
 ```
