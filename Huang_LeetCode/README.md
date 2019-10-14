@@ -828,6 +828,56 @@ class Solution:
                 root = root.right
         return r
 ```
+
+99. [Recover Binary Search Tree](https://leetcode-cn.com/problems/recover-binary-search-tree/)
+```python
+class Solution:
+    def __init__(self):
+        self.res = []
+
+    def recoverTree(self, root):
+        self.mid(root)
+        node1 = None
+        node2 = None
+        for i in range(len(self.res) - 1):
+            if self.res[i].val > self.res[i + 1].val and node1 == None:
+                node1 = self.res[i]
+                node2 = self.res[i + 1]
+            elif self.res[i].val > self.res[i + 1].val and node1 != None:
+                node2 = self.res[i + 1]
+
+        node1.val, node2.val = node2.val, node1.val
+
+    def mid(self, root):
+        if root is not None:
+            self.mid(root.left)
+            self.res.append(root)
+            self.mid(root.right)
+```
+- 中序遍历，如果有一个降序对，交换这两个node；若有两个降序对，说明第一对的前一个node和第二对的后一个node需要交换。
+
+100. [Same Tree](https://leetcode-cn.com/problems/same-tree/)
+```python
+class Solution:
+    def isSameTree(self, p: TreeNode, q: TreeNode) -> bool:
+        if p and q and p.val == q.val:
+            return self.isSameTree(p.left, q.left) and self.isSameTree(
+                p.right, q.right)
+        else:
+            return p is q
+```
+101. [Symmetric Tree](https://leetcode-cn.com/problems/symmetric-tree/)
+```python
+class Solution:
+    def isSymmetric(self, root: TreeNode) -> bool:
+        def isSym(L, R):
+            if not L and not R: return True
+            if L and R and L.val == R.val:
+                return isSym(L.left, R.right) and isSym(L.right, R.left)
+            return False
+
+        return isSym(root, root)
+```
 102. [Binary Tree Level Order Traversal](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
 ```python
 class Solution:
@@ -839,8 +889,20 @@ class Solution:
             level = [kid for n in level for kid in (n.left, n.right) if kid]
         return ans
 ```
+103. [Binary Tree Zigzag Level Order Traversal](https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/)
+```python
+class Solution:
+    def zigzagLevelOrder(self, root: TreeNode) -> List[List[int]]:
+        ans, level = [], [root]
+        while root and level:
+            ans.append([node.val for node in level])
+            level = [kid for n in level for kid in (n.left, n.right) if kid]
+        ans = [k if i % 2 == 0 else k[::-1] for i, k in enumerate(ans)]
+        return ans
+```
+- 层次遍历，对结果进行列表推导，反转奇数层
 
-1.   [Binary Tree Level Order Traversal II](https://leetcode-cn.com/problems/binary-tree-level-order-traversal-ii/)
+107. [Binary Tree Level Order Traversal II](https://leetcode-cn.com/problems/binary-tree-level-order-traversal-ii/)
 ```python
 class Solution:
     def levelOrder(self, root: TreeNode) -> List[List[int]]:
@@ -852,8 +914,23 @@ class Solution:
         return ans[::-1]
 ```
 
+110. [Balanced Binary Tree](https://leetcode-cn.com/problems/balanced-binary-tree/)
+```python
+class Solution:
+    def isBalanced(self, root: TreeNode) -> bool:
+        def check(root):
+            if root is None:
+                return 0
+            left = check(root.left)
+            right = check(root.right)
+            if left == -1 or right == -1 or abs(left - right) > 1:
+                return -1
+            return 1 + max(left, right)
 
-1.   [Valid Palindrome](https://leetcode-cn.com/problems/valid-palindrome/)
+        return check(root) != -1
+```
+
+125.   [Valid Palindrome](https://leetcode-cn.com/problems/valid-palindrome/)
 ```python
 class Solution:
     def isPalindrome(self, s: str) -> bool:
@@ -870,7 +947,7 @@ class Solution:
         return True
 ```
 
-1.   [Longest Consecutive Sequence](https://leetcode-cn.com/problems/longest-consecutive-sequence/)
+128.   [Longest Consecutive Sequence](https://leetcode-cn.com/problems/longest-consecutive-sequence/)
 ```python
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
@@ -892,7 +969,7 @@ class Solution:
         return longest
 ```
 
-1.   [Gas Station](https://leetcode-cn.com/problems/gas-station/)
+134.   [Gas Station](https://leetcode-cn.com/problems/gas-station/)
 ```python
 class Solution:
     def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
@@ -909,7 +986,7 @@ class Solution:
 ```
 
 
-1.   [Candy](https://leetcode-cn.com/problems/candy/)
+135.   [Candy](https://leetcode-cn.com/problems/candy/)
 ```python
 class Solution:
     def candy(self, ratings: List[int]) -> int:
@@ -928,7 +1005,7 @@ class Solution:
         return sum(res)
 ```
 
-1.   [Single Number](https://leetcode-cn.com/problems/single-number/submissions/)
+136.   [Single Number](https://leetcode-cn.com/problems/single-number/submissions/)
 ```python
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:
@@ -938,7 +1015,7 @@ class Solution:
         return x
 ```
 
-1.   [Single Number II](https://leetcode-cn.com/problems/single-number-ii/)
+137.   [Single Number II](https://leetcode-cn.com/problems/single-number-ii/)
 ```python
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:
@@ -947,7 +1024,7 @@ class Solution:
 
 
 
-1.   [Copy List with Random Pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)
+138.   [Copy List with Random Pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)
 ```python
 class Solution:
     def copyRandomList(self, head: 'Node') -> 'Node':
@@ -967,7 +1044,7 @@ class Solution:
      2. 或者通过在原链表上添加节点,最后拆分的方法完成题目要求
    
 
-1.   [Linked List Cycle](https://leetcode-cn.com/problems/linked-list-cycle/)
+141.   [Linked List Cycle](https://leetcode-cn.com/problems/linked-list-cycle/)
 ```python
 class Solution(object):
     def hasCycle(self, head):
@@ -992,7 +1069,7 @@ class Solution(object):
 
         return head != None
 ```
-1.   [Linked List Cycle II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
+142.   [Linked List Cycle II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
 ```python
 class Solution(object):
     def detectCycle(self, head):
@@ -1025,7 +1102,7 @@ class Solution(object):
 ```
 - 设环的起始节点为 E，快慢指针从 head 出发，快指针速度为 2，设相交节点为 X，head 到 E 的距离为 H，E 到 X 的距离为 D，环的长度为 L，那么有：快指针走过的距离等于慢指针走过的距离加快指针多走的距离（多走了 n 圈的 L） 2(H + D) = H + D + nL，因此可以推出 H = nL - D，这意味着如果我们让俩个慢指针一个从 head 出发，一个从 X 出发的话，他们一定会在节点 E 相遇
 
-1.   [Reorder List](https://leetcode-cn.com/problems/reorder-list/)
+143.   [Reorder List](https://leetcode-cn.com/problems/reorder-list/)
 ```python
 class Solution:
     def _splitList(self, head):
@@ -1080,7 +1157,7 @@ class Solution:
         head = self._mergeLists(a, b)
 ```
 
-1.   [Binary Tree Preorder Traversal](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+144.   [Binary Tree Preorder Traversal](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 ```python
 def preorderTraversal(self, root):
     ret = []
@@ -1104,7 +1181,7 @@ class Solution:
 - 使用map对左右孩子分别调用,sum对list进行相加操作
 
 
-1.   [Binary Tree Postorder Traversal](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
+145.   [Binary Tree Postorder Traversal](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
 ```python
 class Solution:
     def postorderTraversal(self, root: TreeNode) -> List[int]:
@@ -1116,7 +1193,7 @@ class Solution:
             stack += root.right and [root.right] or []
         return r[::-1]
 ```
-1.     [LRU Cache](https://leetcode-cn.com/problems/lru-cache/)
+146.     [LRU Cache](https://leetcode-cn.com/problems/lru-cache/)
 ```python
 class LRUCache:
     def __init__(self, capacity: int):
@@ -1136,7 +1213,7 @@ class LRUCache:
         self.od[key] = value
 ```
 
-1.     [Evaluate Reverse Polish Notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
+150.     [Evaluate Reverse Polish Notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
 ```python
 class Solution:
     def evalRPN(self, tokens: List[str]) -> int:
@@ -1161,7 +1238,7 @@ class Solution:
 - 递归地返回左右表达式操作后结果。eval 函数将字符串看作代码得到输出值
 
 
-1.   [Two Sum II - Input array is sorted](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
+167.   [Two Sum II - Input array is sorted](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
 ```python
 class Solution:
     def twoSum(self, numbers: List[int], target: int) -> List[int]:
@@ -1175,7 +1252,7 @@ class Solution:
 
 ```
 
-1.   [Array Partition I](https://leetcode-cn.com/problems/array-partition-i/)
+561.   [Array Partition I](https://leetcode-cn.com/problems/array-partition-i/)
 ```python
 class Solution:
     def arrayPairSum(self, nums: List[int]) -> int:
