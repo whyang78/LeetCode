@@ -856,6 +856,28 @@ class Solution:
 ```
 - 中序遍历，如果有一个降序对，交换这两个node；若有两个降序对，说明第一对的前一个node和第二对的后一个node需要交换。
 
+100. [Same Tree](https://leetcode-cn.com/problems/same-tree/)
+```python
+class Solution:
+    def isSameTree(self, p: TreeNode, q: TreeNode) -> bool:
+        if p and q and p.val == q.val:
+            return self.isSameTree(p.left, q.left) and self.isSameTree(
+                p.right, q.right)
+        else:
+            return p is q
+```
+101. [Symmetric Tree](https://leetcode-cn.com/problems/symmetric-tree/)
+```python
+class Solution:
+    def isSymmetric(self, root: TreeNode) -> bool:
+        def isSym(L, R):
+            if not L and not R: return True
+            if L and R and L.val == R.val:
+                return isSym(L.left, R.right) and isSym(L.right, R.left)
+            return False
+
+        return isSym(root, root)
+```
 102. [Binary Tree Level Order Traversal](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
 ```python
 class Solution:
@@ -892,6 +914,21 @@ class Solution:
         return ans[::-1]
 ```
 
+110. [Balanced Binary Tree](https://leetcode-cn.com/problems/balanced-binary-tree/)
+```python
+class Solution:
+    def isBalanced(self, root: TreeNode) -> bool:
+        def check(root):
+            if root is None:
+                return 0
+            left = check(root.left)
+            right = check(root.right)
+            if left == -1 or right == -1 or abs(left - right) > 1:
+                return -1
+            return 1 + max(left, right)
+
+        return check(root) != -1
+```
 
 125.   [Valid Palindrome](https://leetcode-cn.com/problems/valid-palindrome/)
 ```python
