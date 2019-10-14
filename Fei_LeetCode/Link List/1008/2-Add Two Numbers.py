@@ -1,9 +1,9 @@
-class ListNode:
+class ListNode(object):
     def __init__(self, x):
         self.val = x
         self.next = None
 
-class Solution:
+class Solution(object):
     def addTwoNumbers(self, l1: ListNode, l2: ListNode):
         dummy = cur = ListNode(0)
         carry = 0
@@ -20,5 +20,3 @@ class Solution:
         return dummy.next
 
 
-link = Solution()
-link.addTwoNumbers()
