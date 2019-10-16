@@ -991,6 +991,9 @@ class Solution:
         return root
 ```
 
+- 平衡二叉搜索树：每个节点的左右子树都高度差在1以内，每个节点左子树小于右子树
+- 每个节点当做根节点的时候，左子树形成的数组一定比它小，右子树形成的数组一定比他大
+
 
 110. [Balanced Binary Tree](https://leetcode-cn.com/problems/balanced-binary-tree/)
 ```python
