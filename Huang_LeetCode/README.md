@@ -829,6 +829,48 @@ class Solution:
         return r
 ```
 
+95. [Unique Binary Search Trees II](https://leetcode-cn.com/problems/unique-binary-search-trees-ii/solution/zi-ding-xiang-xia-by-powcai/)
+```python
+class Solution:
+    def generateTrees(self, n: int) -> List[TreeNode]:
+        def node(val, left, right):
+            node = TreeNode(val)
+            node.left = left
+            node.right = right
+            return node
+
+        def trees(first, last):
+            return [
+                node(root, left, right) for root in range(first, last + 1)
+                for left in trees(first, root - 1)
+                for right in trees(root + 1, last)
+            ] or [None]
+
+        if n == 0:
+            return []
+        return trees(1, n)
+```
+- 递归，root遍历取完1到n，左子树为[1,root-1]的组合可能，右子树为[root+1,n]的组合可能
+
+
+96. [Unique Binary Search Trees](https://leetcode-cn.com/problems/unique-binary-search-trees/)
+```python
+class Solution:
+    def numTrees(self, n: int) -> int:
+        res = [0] * (n + 1)
+        res[0] = 1
+        for i in range(1, n + 1):
+            for j in range(i):
+                res[i] += res[j] * res[i - 1 - j]
+        return res[n]
+```
+- 动态规划，遍历1-n，个数为左右子树的乘积
+```python
+def numTrees(self, n):
+    return math.factorial(2*n)/(math.factorial(n)*math.factorial(n+1))
+```
+- 公式法，[卡特兰数](https://baike.baidu.com/item/catalan/7605685?fr=aladdin) $C_0=1,C_{n+1} = \frac{2(2n+1)}{n+2}C_n$
+
 99. [Recover Binary Search Tree](https://leetcode-cn.com/problems/recover-binary-search-tree/)
 ```python
 class Solution:
@@ -902,6 +944,25 @@ class Solution:
 ```
 - 层次遍历，对结果进行列表推导，反转奇数层
 
+
+105. [Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
+```python
+class Solution:
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> TreeNode:
+        if not inorder:
+            return None
+        root = TreeNode(preorder[0])
+        n = inorder.index(root.val)
+
+        root.left = self.buildTree(preorder[1:n + 1], inorder[:n])
+        root.right = self.buildTree(preorder[n + 1:], inorder[n + 1:])
+
+        return root
+```
+
+
+
+
 107. [Binary Tree Level Order Traversal II](https://leetcode-cn.com/problems/binary-tree-level-order-traversal-ii/)
 ```python
 class Solution:
@@ -913,6 +974,26 @@ class Solution:
             level = [kid for n in level for kid in (n.left, n.right) if kid]
         return ans[::-1]
 ```
+
+108. [Convert Sorted Array to Binary Search Tree](https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/solution/dfsdi-gui-er-fen-fa-by-chencyudel/)
+```python
+class Solution:
+    def sortedArrayToBST(self, nums: List[int]) -> TreeNode:
+        if not nums:
+            return None
+
+        mid = len(nums) // 2
+
+        root = TreeNode(nums[mid])
+        root.left = self.sortedArrayToBST(nums[:mid])
+        root.right = self.sortedArrayToBST(nums[mid + 1:])
+
+        return root
+```
+
+- 平衡二叉搜索树：每个节点的左右子树都高度差在1以内，每个节点左子树小于右子树
+- 每个节点当做根节点的时候，左子树形成的数组一定比它小，右子树形成的数组一定比他大
+
 
 110. [Balanced Binary Tree](https://leetcode-cn.com/problems/balanced-binary-tree/)
 ```python
