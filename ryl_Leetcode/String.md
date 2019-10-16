@@ -92,3 +92,63 @@ public:
 };
 ```
 
+
+
+## 344. Reverse String
+
+![1571235818870](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1571235818870.png)
+
+解题思路：
+
+倒转字符串和倒转数组是一样的，但是和倒链表由很大的不同（由于链表的性质）
+
+```cpp
+class Solution {
+public:
+    void reverseString(vector<char>& s) {
+        const int n = s.size();
+        int l = 0, r = n - 1;
+        while(l <= r)
+        {
+            swap(s[l], s[r]);
+            l++, r--;
+        }
+    }
+};
+```
+
+## 13. Roman to Integer
+
+![1571236468335](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1571236468335.png)
+
+解题思路 ：
+
+观察罗马数字的组合，如果前一个小于后一个，说明使用这两个数表示后一个减去前一个的值，如果前一个数大于后一个数就是正常的，将他们代表的数字进行相加。但是为了计算方便使用了一个map来对罗马数字到整数的转换。
+
+```cpp
+class Solution {
+public:
+    int romanToInt(string s) {
+        unordered_map<char, int> mp;
+        mp['I'] = 1, mp['V'] = 5, mp['X'] = 10;
+        mp['L'] = 50, mp['C'] = 100, mp['D'] = 500, mp['M'] = 1000;
+        
+        const int n = s.size();
+        int ans = 0;
+        for(int i = 0; i < n; i++)
+        {
+            if(i < n - 1 && mp[s[i]] < mp[s[i + 1]])
+            {
+                ans += mp[s[i + 1]] - mp[s[i]];
+                i++;
+            }
+            else ans += mp[s[i]];
+        }
+        
+        return ans;
+    }
+};
+```
+
+
+
