@@ -152,3 +152,106 @@ public:
 
 
 
+## 67. Add Binary
+
+![1571302413160](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1571302413160.png)
+
+解题思路：
+
+这道题和两个列表求和是一个思路：每次的和都是两个链表中分别哪一个元素出来，加上进位。如果某个链表没有元素了，那么就用0代替。这里只不过是输入的是字符串，有一个技巧就是字符串减去‘0’就从字符串变成了整数值。
+
+```cpp
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        int carry = 0, i = a.size() - 1, j = b.size() - 1;
+        string ans;
+        while(i >= 0 || j >= 0)
+        {
+            int sum = (i >= 0 ? a[i--] - '0' : 0) + 
+                      (j >= 0 ? b[j--] - '0' : 0) + carry;
+            carry = sum >> 1;
+            ans += '0' + (sum % 2);
+        }
+        
+        if(carry) ans += '1';
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};
+
+```
+
+## 5. Longest Palindromic Substring
+
+![1571304405603](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1571304405603.png)
+
+解题思路：
+
+暴力的方法，遍历每一个字符，让其作为中心，然后往前和往后进行匹配，但是需要注意回文子串是奇数和偶数的情况。
+
+```cpp
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        string ans;
+        int len = 0;
+        for (int i = 0; i < s.size(); i++)
+        {
+            
+            for (int j = 0; i - j >= 0 && i + j < s.size(); j++)
+            {
+                if (s[i - j] == s[i + j])
+                {
+                    if (j * 2 + 1 > len)
+                    {
+                        len = j * 2 + 1;
+                        ans = s.substr(i - j, j * 2 + 1);
+                    }
+                }
+                else break;
+            }
+            
+            
+            for (int j = i, k = i + 1; j >= 0 && k < s.size(); j--, k++)
+            {
+                if (s[j] == s[k])
+                {
+                    if (k - j + 1 > len)
+                    {
+                        len = k - j + 1;
+                        ans = s.substr(j, k - j + 1);
+                    }
+                }
+                else break;
+            }
+        }
+        
+        return ans;
+    }
+};
+```
+
+## 58. Length of Last word
+
+![1571304927078](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1571304927078.png)
+
+解题思路：
+
+因为是找最后一个单词的长度，所有可以直接从后面开始往前面找，但是需要注意的是，可能最后面又空格，所以在计算最后一个单词的长度之前需要把空格去掉
+
+```cpp
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int ans = 0, i = s.size() - 1;
+        while(i >= 0 && s[i] == ' ') i--;
+        while(i >= 0 && s[i] != ' ')
+        {
+            ans++; i--;
+        }
+        return ans;
+    }
+};
+```
+
