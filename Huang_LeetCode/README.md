@@ -871,6 +871,29 @@ def numTrees(self, n):
 ```
 - 公式法，[卡特兰数](https://baike.baidu.com/item/catalan/7605685?fr=aladdin) $C_0=1,C_{n+1} = \frac{2(2n+1)}{n+2}C_n$
 
+
+
+98. []()
+```python
+class Solution:
+    def isValidBST(self, root: TreeNode) -> bool:
+        output = []
+        self.inOrder(root, output)
+
+        return all([a > b for a, b in zip(output[1:], output)])
+
+    def inOrder(self, root, output):
+        if root is None:
+            return
+
+        self.inOrder(root.left, output)
+        output.append(root.val)
+        self.inOrder(root.right, output)
+```
+- 中序遍历结果为升序
+
+
+
 99. [Recover Binary Search Tree](https://leetcode-cn.com/problems/recover-binary-search-tree/)
 ```python
 class Solution:
@@ -995,6 +1018,31 @@ class Solution:
 - 每个节点当做根节点的时候，左子树形成的数组一定比它小，右子树形成的数组一定比他大
 
 
+109. [Convert Sorted List to Binary Search Tree](https://leetcode-cn.com/problems/convert-sorted-list-to-binary-search-tree/solution/you-xu-lian-biao-zhuan-huan-er-cha-sou-suo-shu-pyt/)
+```python
+class Solution:
+    def sortedListToBST(self, head: ListNode) -> TreeNode:
+        if head is None:
+            return
+        node_arr = []
+        while head:
+            node_arr.append(head.val)
+            head = head.next
+
+        def buildBST(nums):
+            if len(nums) == 0:
+                return
+            mid = len(nums) // 2
+            root = TreeNode(nums[mid])
+
+            root.left = buildBST(nums[:mid])
+            root.right = buildBST(nums[mid + 1:])
+            return root
+
+        return buildBST(node_arr)
+```
+- 链表转化为数组后,采用108题的做法
+
 110. [Balanced Binary Tree](https://leetcode-cn.com/problems/balanced-binary-tree/)
 ```python
 class Solution:
@@ -1010,6 +1058,21 @@ class Solution:
 
         return check(root) != -1
 ```
+
+111. [Minimum Depth of Binary Tree](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/solution/er-cha-shu-de-zui-xiao-shen-du-by-leetcode/)
+
+```python
+class Solution:
+    def minDepth(self, root: TreeNode) -> int:
+        if root == None:
+            return 0
+
+        if root.left == None or root.right == None:
+            return self.minDepth(root.left) + self.minDepth(root.right) + 1
+
+        return min(self.minDepth(root.right), self.minDepth(root.left)) + 1
+```
+- 注意叶子结点的定义:没有子节点的节点
 
 114. [Flatten Binary Tree to Linked List](https://leetcode-cn.com/problems/flatten-binary-tree-to-linked-list/submissions/)
 ```python
