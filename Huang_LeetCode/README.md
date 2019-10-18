@@ -1074,6 +1074,42 @@ class Solution:
 ```
 - 注意叶子结点的定义:没有子节点的节点
 
+112. [Path Sum](https://leetcode-cn.com/problems/path-sum/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-26/)
+```python
+class Solution:
+    def hasPathSum(self, root: TreeNode, sum: int) -> bool:
+        if not root:
+            return False
+        if not root.left and not root.right and root.val == sum:
+            return True
+        sum -= root.val
+
+        return self.hasPathSum(root.left, sum) or self.hasPathSum(root.right, sum)
+```
+
+113. [Path Sum II](https://leetcode-cn.com/problems/path-sum-ii/solution/lu-jing-zong-he-iipython-by-fei-ben-de-cai-zhu-uc4/)
+```python
+class Solution:
+    def pathSum(self, root: TreeNode, sum: int) -> List[List[int]]:
+        stack = []
+        if not root:
+            return []
+
+        def help(root, sum, tmp):
+            if not root:
+                return []
+            if not root.left and not root.right and sum - root.val == 0:
+                tmp += [root.val]
+                stack.append(tmp)
+            sum -= root.val
+            help(root.left, sum, tmp + [root.val])
+            help(root.right, sum, tmp + [root.val])
+
+        help(root, sum, [])
+        return stack
+```
+
+
 114. [Flatten Binary Tree to Linked List](https://leetcode-cn.com/problems/flatten-binary-tree-to-linked-list/submissions/)
 ```python
 class Solution:
@@ -1136,6 +1172,23 @@ class Solution:
     2. 一个子节点：将这个子节点的 next 属性设置为同层的下一个节点，即为 root.next 的最左边的一个节点，如果 root.next 没有子节点，则考虑 root.next.next，依次类推
     3. 两个子节点:左子节点指向右子节点，然后右子节点同第二种情况的做法
 
+124. [Binary Tree Maximum Path Sum](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
+```python
+class Solution:
+    def maxPathSum(self, root: TreeNode) -> int:
+        def maxend(node):
+            if not node:
+                return 0
+            left = maxend(node.left)
+            right = maxend(node.right)
+            self.max = max(self.max, left + node.val + right)
+            return max(node.val + max(left, right), 0)
+
+        self.max = float('-inf')
+        maxend(root)
+        return self.max
+```
+
 
 125.   [Valid Palindrome](https://leetcode-cn.com/problems/valid-palindrome/)
 ```python
@@ -1175,6 +1228,26 @@ class Solution:
                 longest = max(longest, lenleft + 1 + lenright)
         return longest
 ```
+
+129. [Sum Root to Leaf Numbers](https://leetcode-cn.com/problems/sum-root-to-leaf-numbers/)
+```python
+class Solution:
+    def sumNumbers(self, root: TreeNode) -> int:
+        if not root:
+            return 0
+        stack, res = [(root, root.val)], 0
+        while stack:
+            node, val = stack.pop()
+            if node:
+                if not node.left and not node.right:
+                    res += val
+                if node.left:
+                    stack.append((node.left, val * 10 + node.left.val))
+                if node.right:
+                    stack.append((node.right, val * 10 + node.right.val))
+        return res
+```
+
 
 134.   [Gas Station](https://leetcode-cn.com/problems/gas-station/)
 ```python
