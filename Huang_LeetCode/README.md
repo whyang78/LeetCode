@@ -287,8 +287,38 @@ class Solution:
                     return False
         return not stack
 ```
+21. [Merge Two Sorted Lists](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
+```python
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        dummy = cur = ListNode(0)
+        while l1 and l2:
+            if l1.val < l2.val:
+                cur.next = l1
+                l1 = l1.next
+            else:
+                cur.next = l2
+                l2 = l2.next
+            cur = cur.next
+        cur.next = l1 or l2
+        return dummy.next
+```
 
-
+23. [Merge k Sorted Lists](https://leetcode-cn.com/problems/merge-k-sorted-lists/solution/he-bing-kge-pai-xu-lian-biao-by-leetcode/)
+```python
+class Solution:
+    def mergeKLists(self, lists: List[ListNode]) -> ListNode:
+        self.nodes = []
+        head = p = ListNode(0)
+        for k in lists:
+            while k:
+                self.nodes.append(k.val)
+                k = k.next
+        for x in sorted(self.nodes):
+            p.next = ListNode(x)
+            p = p.next
+        return head.next
+```
 
 
 24. [Swap Nodes in Pairs](https://leetcode-cn.com/problems/swap-nodes-in-pairs)
@@ -775,6 +805,22 @@ class Solution:
         right_cur.next = None
         return left_dummy.next
 ```
+
+88.[Merge Sorted Array](https://leetcode-cn.com/problems/merge-sorted-array/)
+```python
+class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int],
+              n: int) -> None:
+        """
+        Do not return anything, modify nums1 in-place instead.
+        """
+        while n > 0:
+            if m and nums1[m - 1] > nums2[n - 1]:
+                nums1[n + m - 1], m = nums1[m - 1], m - 1
+            else:
+                nums1[n + m - 1], n = nums2[n - 1], n - 1
+```
+
 
 89. [Gray Code](https://leetcode-cn.com/problems/gray-code/)
 ```python
