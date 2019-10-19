@@ -6,9 +6,11 @@ class ListNode(object):
 def reverseLinkedList(self, head: ListNode):
     prev = None
     while head:
-        head.next, prev, head = prev, head, head.next
+        temp = head
+        head = head.next
+        temp.next = prev
+        prev = temp
     return prev
-
 
 
 
