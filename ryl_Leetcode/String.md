@@ -255,3 +255,31 @@ public:
 };
 ```
 
+## 3. Longest Substring Without Repeating Characters
+
+![23231571496496297](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1571496496297.png)
+
+解题思路
+
+hash table与滑动窗口
+
+定义两个指针i, j,表示的是这两个指针扫描到的区间是s[i, j],在维护一个hash table来记录每一个字符出现的次数，如果s[j]>1则让i往后面移动，直到s[i]<=1此时在计算ans=max(ans, j - i + 1)
+
+```cpp
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int ans = 0;
+        unordered_map<char, int> hash;
+        
+        for (int i = 0, j = 0; j < s.size(); j++)
+        {
+            hash[s[i]] ++;
+            while(hash[s[i]] > 1) hash[s[i++]] --;
+            ans = max(ans, j - i + 1);
+        }
+        return ans;
+    }
+};
+```
+
