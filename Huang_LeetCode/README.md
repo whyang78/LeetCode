@@ -478,6 +478,24 @@ class Solution:
 - '.'可匹配任意一个除了'\n'的字符。(.) 匹配任意一个除了\n的字符并把这个匹配结果放进第一组。(.)\1 匹配一个任意字符的二次重复并把那个字符放入数组。(.)\1* 匹配一个任意字符的多次重复并把那个字符放入数组
 - group(default=0)可以取匹配文本。group(1)取第一个括号内的文本
 
+
+41. [First Missing Positive](https://leetcode-cn.com/problems/first-missing-positive/solution/que-shi-de-di-yi-ge-zheng-shu-by-leetcode/)
+```python
+class Solution:
+    def firstMissingPositive(self, nums: List[int]) -> int:
+        for i in range(len(nums)):
+            while 0 <= nums[i] - 1 < len(nums) and nums[nums[i]-1] != nums[i]:
+                tmp = nums[i] - 1
+                nums[i], nums[tmp] = nums[tmp], nums[i]
+        for i in range(len(nums)):
+            if nums[i] != i + 1:
+                return i + 1
+        return len(nums) + 1
+```
+- 桶排序 负数、零和大于N的正数不用考虑。将1~n之内的数映射到0~n-1,最后遍历找出缺失数
+
+
+
 42. [Trapping Rain Water](https://leetcode-cn.com/problems/trapping-rain-water/)
 ```python
 class Solution:
@@ -1538,6 +1556,53 @@ class LRUCache:
             self.od.popitem(False)  # 先进先出
         self.od[key] = value
 ```
+
+147. [Insertion Sort List](https://leetcode-cn.com/problems/insertion-sort-list/solution/jia-ge-tailsu-du-jiu-kuai-liao-by-powcai/)
+```python
+class Solution:
+    def insertionSortList(self, head: ListNode) -> ListNode:
+        p = dummy = ListNode(0)
+        cur = dummy.next = head
+        while cur and cur.next:
+            val = cur.next.val
+            if cur.val < val:
+                cur = cur.next
+                continue
+            if p.next.val > val:
+                p = dummy
+            while p.next.val < val:
+                p = p.next
+            new = cur.next
+            cur.next = new.next
+            new.next = p.next
+            p.next = new
+        return dummy.next
+```
+
+148. [Sort List](https://leetcode-cn.com/problems/sort-list/)
+```python
+class Solution:
+    def sortList(self, head: ListNode) -> ListNode:
+        def merge(h1, h2):
+            dummy = tail = ListNode(None)
+            while h1 and h2:
+                if h1.val < h2.val:
+                    tail.next, tail, h1 = h1, h1, h1.next
+                else:
+                    tail.next, tail, h2 = h2, h2, h2.next
+            tail.next = h1 or h2
+            return dummy.next
+
+        if not head or not head.next:
+            return head
+        pre, slow, fast = None, head, head
+        while fast and fast.next:
+            pre, slow, fast = slow, slow.next, fast.next.next
+        pre.next = None
+
+        return merge(*map(self.sortList, (head, slow)))
+```
+
 
 150.     [Evaluate Reverse Polish Notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
 ```python
