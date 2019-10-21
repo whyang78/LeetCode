@@ -452,6 +452,28 @@ class Solution:
         return -1
 ```
 
+35. []()
+```python
+class Solution:
+    def searchInsert(self, nums: List[int], target: int) -> int:
+        return bisect.bisect_left(nums, target, 0, len(nums))
+```
+- 调用库函数
+```python
+class Solution:
+    def searchInsert(self, nums: List[int], target: int) -> int:
+        left, right = 0, len(nums) - 1
+        while left < right:
+            mid = left + (right - left) // 2
+            if nums[mid] == target:
+                return mid
+            elif nums[mid] < target:
+                left = mid + 1
+            else:
+                right = mid - 1
+        return left
+```
+
 36. [Valid Sudoku](https://leetcode-cn.com/problems/valid-sudoku/)
 ```python
 class Solution:
@@ -713,6 +735,46 @@ class Solution:
             for i in range(m):
                 matrix[i][0] = 0
 ```
+
+1.  [Search a 2D Matrix](https://leetcode-cn.com/problems/search-a-2d-matrix/)
+```python
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        if not matrix or target is None:
+            return False
+        rows, cols = len(matrix), len(matrix[0])
+        i, j = 0, cols - 1
+        while (i < rows and j >= 0):
+            if matrix[i][j] > target:
+                j -= 1
+            elif matrix[i][j] < target:
+                i += 1
+            else:
+                return True
+        return False
+```
+
+75. [Sort Colors](https://leetcode-cn.com/problems/sort-colors/)
+```python
+class Solution:
+    def sortColors(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        red, white, blue = 0, 0, len(nums) - 1
+        while white <= blue:
+            if nums[white] == 0:
+                nums[red], nums[white] = nums[white], nums[red]
+                white += 1
+                red += 1
+            elif nums[white] == 1:
+                white += 1
+            else:
+                nums[white], nums[blue] = nums[blue], nums[white]
+                blue -= 1
+```
+- 双指针，两边向中间走
+
 
 80. [Remove Duplicates from Sorted Array II](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii)
 ```python
