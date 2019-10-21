@@ -287,8 +287,38 @@ class Solution:
                     return False
         return not stack
 ```
+21. [Merge Two Sorted Lists](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
+```python
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        dummy = cur = ListNode(0)
+        while l1 and l2:
+            if l1.val < l2.val:
+                cur.next = l1
+                l1 = l1.next
+            else:
+                cur.next = l2
+                l2 = l2.next
+            cur = cur.next
+        cur.next = l1 or l2
+        return dummy.next
+```
 
-
+23. [Merge k Sorted Lists](https://leetcode-cn.com/problems/merge-k-sorted-lists/solution/he-bing-kge-pai-xu-lian-biao-by-leetcode/)
+```python
+class Solution:
+    def mergeKLists(self, lists: List[ListNode]) -> ListNode:
+        self.nodes = []
+        head = p = ListNode(0)
+        for k in lists:
+            while k:
+                self.nodes.append(k.val)
+                k = k.next
+        for x in sorted(self.nodes):
+            p.next = ListNode(x)
+            p = p.next
+        return head.next
+```
 
 
 24. [Swap Nodes in Pairs](https://leetcode-cn.com/problems/swap-nodes-in-pairs)
@@ -422,6 +452,28 @@ class Solution:
         return -1
 ```
 
+35. []()
+```python
+class Solution:
+    def searchInsert(self, nums: List[int], target: int) -> int:
+        return bisect.bisect_left(nums, target, 0, len(nums))
+```
+- 调用库函数
+```python
+class Solution:
+    def searchInsert(self, nums: List[int], target: int) -> int:
+        left, right = 0, len(nums) - 1
+        while left < right:
+            mid = left + (right - left) // 2
+            if nums[mid] == target:
+                return mid
+            elif nums[mid] < target:
+                left = mid + 1
+            else:
+                right = mid - 1
+        return left
+```
+
 36. [Valid Sudoku](https://leetcode-cn.com/problems/valid-sudoku/)
 ```python
 class Solution:
@@ -447,6 +499,24 @@ class Solution:
 - re.sub(正则,替换字符串或函数,被替换字符串,是否区分大小写)
 - '.'可匹配任意一个除了'\n'的字符。(.) 匹配任意一个除了\n的字符并把这个匹配结果放进第一组。(.)\1 匹配一个任意字符的二次重复并把那个字符放入数组。(.)\1* 匹配一个任意字符的多次重复并把那个字符放入数组
 - group(default=0)可以取匹配文本。group(1)取第一个括号内的文本
+
+
+41. [First Missing Positive](https://leetcode-cn.com/problems/first-missing-positive/solution/que-shi-de-di-yi-ge-zheng-shu-by-leetcode/)
+```python
+class Solution:
+    def firstMissingPositive(self, nums: List[int]) -> int:
+        for i in range(len(nums)):
+            while 0 <= nums[i] - 1 < len(nums) and nums[nums[i]-1] != nums[i]:
+                tmp = nums[i] - 1
+                nums[i], nums[tmp] = nums[tmp], nums[i]
+        for i in range(len(nums)):
+            if nums[i] != i + 1:
+                return i + 1
+        return len(nums) + 1
+```
+- 桶排序 负数、零和大于N的正数不用考虑。将1~n之内的数映射到0~n-1,最后遍历找出缺失数
+
+
 
 42. [Trapping Rain Water](https://leetcode-cn.com/problems/trapping-rain-water/)
 ```python
@@ -666,6 +736,46 @@ class Solution:
                 matrix[i][0] = 0
 ```
 
+1.  [Search a 2D Matrix](https://leetcode-cn.com/problems/search-a-2d-matrix/)
+```python
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        if not matrix or target is None:
+            return False
+        rows, cols = len(matrix), len(matrix[0])
+        i, j = 0, cols - 1
+        while (i < rows and j >= 0):
+            if matrix[i][j] > target:
+                j -= 1
+            elif matrix[i][j] < target:
+                i += 1
+            else:
+                return True
+        return False
+```
+
+75. [Sort Colors](https://leetcode-cn.com/problems/sort-colors/)
+```python
+class Solution:
+    def sortColors(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        red, white, blue = 0, 0, len(nums) - 1
+        while white <= blue:
+            if nums[white] == 0:
+                nums[red], nums[white] = nums[white], nums[red]
+                white += 1
+                red += 1
+            elif nums[white] == 1:
+                white += 1
+            else:
+                nums[white], nums[blue] = nums[blue], nums[white]
+                blue -= 1
+```
+- 双指针，两边向中间走
+
+
 80. [Remove Duplicates from Sorted Array II](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii)
 ```python
 class Solution:
@@ -775,6 +885,22 @@ class Solution:
         right_cur.next = None
         return left_dummy.next
 ```
+
+88.[Merge Sorted Array](https://leetcode-cn.com/problems/merge-sorted-array/)
+```python
+class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int],
+              n: int) -> None:
+        """
+        Do not return anything, modify nums1 in-place instead.
+        """
+        while n > 0:
+            if m and nums1[m - 1] > nums2[n - 1]:
+                nums1[n + m - 1], m = nums1[m - 1], m - 1
+            else:
+                nums1[n + m - 1], n = nums2[n - 1], n - 1
+```
+
 
 89. [Gray Code](https://leetcode-cn.com/problems/gray-code/)
 ```python
@@ -1492,6 +1618,53 @@ class LRUCache:
             self.od.popitem(False)  # 先进先出
         self.od[key] = value
 ```
+
+147. [Insertion Sort List](https://leetcode-cn.com/problems/insertion-sort-list/solution/jia-ge-tailsu-du-jiu-kuai-liao-by-powcai/)
+```python
+class Solution:
+    def insertionSortList(self, head: ListNode) -> ListNode:
+        p = dummy = ListNode(0)
+        cur = dummy.next = head
+        while cur and cur.next:
+            val = cur.next.val
+            if cur.val < val:
+                cur = cur.next
+                continue
+            if p.next.val > val:
+                p = dummy
+            while p.next.val < val:
+                p = p.next
+            new = cur.next
+            cur.next = new.next
+            new.next = p.next
+            p.next = new
+        return dummy.next
+```
+
+148. [Sort List](https://leetcode-cn.com/problems/sort-list/)
+```python
+class Solution:
+    def sortList(self, head: ListNode) -> ListNode:
+        def merge(h1, h2):
+            dummy = tail = ListNode(None)
+            while h1 and h2:
+                if h1.val < h2.val:
+                    tail.next, tail, h1 = h1, h1, h1.next
+                else:
+                    tail.next, tail, h2 = h2, h2, h2.next
+            tail.next = h1 or h2
+            return dummy.next
+
+        if not head or not head.next:
+            return head
+        pre, slow, fast = None, head, head
+        while fast and fast.next:
+            pre, slow, fast = slow, slow.next, fast.next.next
+        pre.next = None
+
+        return merge(*map(self.sortList, (head, slow)))
+```
+
 
 150.     [Evaluate Reverse Polish Notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
 ```python
