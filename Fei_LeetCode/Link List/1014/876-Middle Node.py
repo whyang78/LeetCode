@@ -18,7 +18,7 @@ def middleNode(self, head: LinkNode):
     #     else:
     #         cur = cur.next
     #  return head
-    A = [head.val]
+    A = [head]
     while A[-1].next:
         A.append(A[-1].next)
     return A[len(A) // 2]
