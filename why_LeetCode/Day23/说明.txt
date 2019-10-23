@@ -1,0 +1,3 @@
+string.find与find的区别：
+string.find 一般返回pos（size_t类型）;
+find一般返回iterator类型。
