@@ -582,6 +582,15 @@ class Solution:
 ```
 - 用内置函数直接实现
 
+
+47. [Permutations II](https://leetcode-cn.com/problems/permutations-ii/solution/hui-su-suan-fa-python-dai-ma-java-dai-ma-by-liwe-2/)
+```python
+class Solution:
+    def permuteUnique(self, nums: List[int]) -> List[List[int]]:
+        from itertools import permutations
+        return list(set(permutations(nums)))
+```
+
 48. [Rotate Image](https://leetcode-cn.com/problems/rotate-image/)
 ```python
 class Solution:
@@ -793,6 +802,15 @@ class Solution:
                 blue -= 1
 ```
 - 双指针，两边向中间走
+
+
+77. [Combinations](https://leetcode-cn.com/problems/combinations/)
+```python
+class Solution:
+    def combine(self, n: int, k: int) -> List[List[int]]:
+        from itertools import combinations
+        return list(combinations(range(1, n + 1), k))
+```
 
 
 78. [Subsets](https://leetcode-cn.com/problems/subsets/)
