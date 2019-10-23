@@ -563,6 +563,34 @@ class Solution:
 ```
 - '?' 可以匹配任何单个字符。'*' 可以匹配任意字符串（包括空字符串）。
 
+
+46. [Permutations](https://leetcode-cn.com/problems/permutations/)
+```python
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        return [[n] + sub for i, n in enumerate(nums)
+                for sub in self.permute(nums[:i] + nums[i + 1:])] or [nums]
+```
+
+- 每次固定第一个数字递归地排列数组剩余部分
+
+```python
+ class Solution:
+     def permute(self, nums: List[int]) -> List[List[int]]:
+        from itertools import permutations
+        return list(permutations(nums))
+```
+- 用内置函数直接实现
+
+
+47. [Permutations II](https://leetcode-cn.com/problems/permutations-ii/solution/hui-su-suan-fa-python-dai-ma-java-dai-ma-by-liwe-2/)
+```python
+class Solution:
+    def permuteUnique(self, nums: List[int]) -> List[List[int]]:
+        from itertools import permutations
+        return list(set(permutations(nums)))
+```
+
 48. [Rotate Image](https://leetcode-cn.com/problems/rotate-image/)
 ```python
 class Solution:
@@ -736,7 +764,7 @@ class Solution:
                 matrix[i][0] = 0
 ```
 
-1.  [Search a 2D Matrix](https://leetcode-cn.com/problems/search-a-2d-matrix/)
+74.  [Search a 2D Matrix](https://leetcode-cn.com/problems/search-a-2d-matrix/)
 ```python
 class Solution:
     def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
@@ -775,6 +803,24 @@ class Solution:
 ```
 - 双指针，两边向中间走
 
+
+77. [Combinations](https://leetcode-cn.com/problems/combinations/)
+```python
+class Solution:
+    def combine(self, n: int, k: int) -> List[List[int]]:
+        from itertools import combinations
+        return list(combinations(range(1, n + 1), k))
+```
+
+
+78. [Subsets](https://leetcode-cn.com/problems/subsets/)
+```python
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        from itertools import combinations
+        return sum([list(combinations(nums, i)) for i in range(len(nums) + 1)],
+                   [])
+```
 
 80. [Remove Duplicates from Sorted Array II](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii)
 ```python
@@ -908,6 +954,22 @@ class Solution:
     def grayCode(self, n: int) -> List[int]:
         return [i ^ i >> 1 for i in range(1 << n)]
 ```
+
+90. [Subsets II](https://leetcode-cn.com/problems/subsets-ii/solution/tong-ji-pin-ci-zai-zu-he-fa-by-mai-mai-mai-mai-zi/)
+```python
+class Solution:
+    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
+        from collections import Counter
+        c = Counter(nums)
+        res = [[]]
+        for i, v in c.items():
+            temp = res.copy()
+            for j in res:
+                temp.extend(j + [i] * (k + 1) for k in range(v))
+            res = temp
+        return res
+```
+
 
 92. [Reverse Linked List II](https://leetcode-cn.com/problems/reverse-linked-list-ii/)
 ```python
