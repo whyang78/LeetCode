@@ -234,6 +234,20 @@ class Solution:
 ```
 - sort避免重复,使得输出结果都是升序,用字典记录{需要的值:当前索引},字典会记录比较大的那个索引,用d[n]>j来避免重复选择一个元素,(nums[i], n, -nums[i] - n)保证列表升序
 
+
+17. [Letter Combinations of a Phone Number](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
+```python
+class Solution:
+    def letterCombinations(self, digits: str) -> List[str]:
+        from itertools import product
+        l = '- - abc def ghi jkl mno pqrs tuv wxyz'.split()
+        return [''.join(c)
+                for c in product(*[l[int(i)]
+                                   for i in digits])] if digits else []
+```
+
+
+
 18. [4Sum](https://leetcode-cn.com/problems/4sum)
 ```python
 class Solution:
@@ -1394,6 +1408,72 @@ class Solution:
             r -= 1
         return True
 ```
+
+126. [Word Ladder II](https://leetcode-cn.com/problems/word-ladder-ii/solution/bfs-level-order-traverse-by-matrix95/)
+```python
+import collections
+import string
+class Solution:
+    def findLadders(self, beginWord: str, endWord: str,
+                    wordList: List[str]) -> List[List[str]]:
+        wordList = set(wordList)  # 转化为set实现O(1)的in判断
+        if endWord not in wordList:
+            return []
+        level = {beginWord}
+        parents = collections.defaultdict(set)
+        while level and endWord not in parents:
+            next_level = collections.defaultdict(set)
+            for node in level:
+                for char in string.ascii_lowercase:
+                    for i in range(len(beginWord)):
+                        n = node[:i] + char + node[i + 1:]
+                        if n in wordList and n not in parents:
+                            next_level[n].add(node)
+            level = next_level
+            parents.update(next_level)
+        res = [[endWord]]
+        while res and res[0][0] != beginWord:
+            res = [[p] + r for r in res for p in parents[r[0]]]
+        return res
+```
+- 注意要把wordList转化为set,实现O(1)的in判断,否者超时
+- 递归输出res
+
+
+127. [Word Ladder](https://leetcode-cn.com/problems/word-ladder/solution/dan-ci-jie-long-by-leetcode/)
+```python
+from collections import deque
+class Solution(object):
+    def ladderLength(self, beginWord, endWord, wordList):
+        def construct_dict(word_list):
+            d = {}
+            for word in word_list:
+                for i in range(len(word)):
+                    s = word[:i] + "_" + word[i + 1:]
+                    d[s] = d.get(s, []) + [word]
+            return d
+
+        def bfs_words(begin, end, dict_words):
+            queue, visited = deque([(begin, 1)]), set()
+            while queue:
+                word, steps = queue.popleft()
+                if word not in visited:
+                    visited.add(word)
+                    if word == end:
+                        return steps
+                    for i in range(len(word)):
+                        s = word[:i] + "_" + word[i + 1:]
+                        neigh_words = dict_words.get(s, [])
+                        for neigh in neigh_words:
+                            if neigh not in visited:
+                                queue.append((neigh, steps + 1))
+            return 0
+
+        d = construct_dict(wordList or set([beginWord, endWord]))
+        return bfs_words(beginWord, endWord, d)
+```
+- 将问题抽象在一个无向无权图中，每个单词作为节点，差距只有一个字母的两个单词之间连一条边。问题变成找到从起点到终点的最短路径
+- 算法中最重要的步骤是找出相邻的节点，也就是只差一个字母的两个单词。为了快速的找到这些相邻节点，我们对给定的 wordList 做一个预处理，将单词中的某个字母用 '-' 代替
 
 128.   [Longest Consecutive Sequence](https://leetcode-cn.com/problems/longest-consecutive-sequence/)
 ```python
