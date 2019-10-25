@@ -86,3 +86,118 @@ public:
 };
 ```
 
+## 144. Binary Tree Preorder Traversal
+
+![1572005410205](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1572005410205.png)
+
+**解题思路：**
+
+使用递归的方法：理解二叉树的前序遍历
+
+使用非递归的方法：后面在补充
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> res;
+        preorderTraversal(root, res);
+        return res;
+    }
+    
+    void preorderTraversal(TreeNode* root,  vector<int>& res)
+    {
+        if (!root) return;
+        
+        res.push_back(root->val);
+        preorderTraversal(root->left, res);
+        preorderTraversal(root->right, res);
+    }
+};
+```
+
+## 94. Binary Tree Inorder Traversal
+
+![1572005701992](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1572005701992.png)
+
+**解题思路：**
+
+使用递归的方法：理解二叉树的中序遍历
+
+使用非递归的方法：后面在补充
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+        inorderTraversal(root, res);
+        return res;
+    }
+    void inorderTraversal(TreeNode* root, vector<int>& res)
+    {
+        if (!root) return;
+        inorderTraversal(root->left, res);
+        res.push_back(root->val);
+        inorderTraversal(root->right, res);
+    }
+    
+};
+```
+
+## 145. Binary Tree Posterorder Traversal
+
+![1572005957601](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1572005957601.png)
+
+**解题思路：**
+
+使用递归的方法：理解二叉树的后序遍历
+
+使用非递归的方法：后面在补充
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> res;
+        postorderTraversal(root, res);
+        return res;
+    }
+    
+    void postorderTraversal(TreeNode* root, vector<int>& res)
+    {
+        if (!root) return; 
+        postorderTraversal(root->left, res);
+        postorderTraversal(root->right, res);
+        res.push_back(root->val);
+    }
+};
+```
+
