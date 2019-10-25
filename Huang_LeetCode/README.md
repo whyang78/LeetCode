@@ -1517,7 +1517,66 @@ class Solution:
 ```
 
 
-134.   [Gas Station](https://leetcode-cn.com/problems/gas-station/)
+130. [Surrounded Regions](https://leetcode-cn.com/problems/surrounded-regions/)
+```python
+class Solution:
+    def solve(self, board: List[List[str]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+        if not any(board):
+            return
+
+        m, n = len(board), len(board[0])
+        save = [
+            ij for k in range(m + n) for ij in ((0, k), (m - 1, k), (k, 0), (k, n - 1))
+        ]
+        # 遍历边界坐标
+        while save:
+            i, j = save.pop()
+            if 0 <= i < m and 0 <= j < n and board[i][j] == "O":
+                board[i][j] = "S"
+                save += (i, j - 1), (i, j + 1), (i - 1, j), (i + 1, j)
+
+        # 把'S'转化为'O',其他字符统一变换成'X'
+        board[:] = [["XO"[c == "S"] for c in row] for row in board]
+```
+
+131. [Palindrome Partitioning](https://leetcode-cn.com/problems/palindrome-partitioning/)
+```python
+class Solution:
+    def partition(self, s: str) -> List[List[str]]:
+        res = []
+        self.dfs(s, [], res)
+        return res
+
+    def dfs(self, s, path, res):
+        if not s:
+            res.append(path)
+            return
+        for i in range(1, len(s) + 1):
+            if self.isPal(s[:i]):
+                self.dfs(s[i:], path + [s[:i]], res)
+
+    def isPal(self, s):
+        return s == s[::-1]
+```
+- 分治,将大问题分解为小问题。在遍历切割字符串的过程中,递归求的回文串。
+
+132. [Palindrome Partitioning II](https://leetcode-cn.com/problems/palindrome-partitioning-ii/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-3-8/)
+```python
+class Solution:
+    def minCut(self, s: str) -> int:
+        cut = [x for x in range(-1, len(s))]
+        for i in range(0, len(s)):
+            for j in range(i, len(s)):
+                if s[i:j] == s[j:i:-1]:
+                    cut[j + 1] = min(cut[j + 1], cut[i] + 1)
+        return cut[-1]
+```
+
+
+133.   [Gas Station](https://leetcode-cn.com/problems/gas-station/)
 ```python
 class Solution:
     def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
@@ -1534,7 +1593,7 @@ class Solution:
 ```
 
 
-135.   [Candy](https://leetcode-cn.com/problems/candy/)
+1.     [Candy](https://leetcode-cn.com/problems/candy/)
 ```python
 class Solution:
     def candy(self, ratings: List[int]) -> int:
@@ -1553,7 +1612,7 @@ class Solution:
         return sum(res)
 ```
 
-136.   [Single Number](https://leetcode-cn.com/problems/single-number/submissions/)
+1.     [Single Number](https://leetcode-cn.com/problems/single-number/submissions/)
 ```python
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:
@@ -1563,7 +1622,7 @@ class Solution:
         return x
 ```
 
-137.   [Single Number II](https://leetcode-cn.com/problems/single-number-ii/)
+1.     [Single Number II](https://leetcode-cn.com/problems/single-number-ii/)
 ```python
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:
@@ -1572,7 +1631,7 @@ class Solution:
 
 
 
-138.   [Copy List with Random Pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)
+1.     [Copy List with Random Pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)
 ```python
 class Solution:
     def copyRandomList(self, head: 'Node') -> 'Node':
@@ -1592,7 +1651,7 @@ class Solution:
      2. 或者通过在原链表上添加节点,最后拆分的方法完成题目要求
    
 
-141.   [Linked List Cycle](https://leetcode-cn.com/problems/linked-list-cycle/)
+1.     [Linked List Cycle](https://leetcode-cn.com/problems/linked-list-cycle/)
 ```python
 class Solution(object):
     def hasCycle(self, head):
@@ -1617,7 +1676,7 @@ class Solution(object):
 
         return head != None
 ```
-142.   [Linked List Cycle II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
+1.     [Linked List Cycle II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
 ```python
 class Solution(object):
     def detectCycle(self, head):
@@ -1650,7 +1709,7 @@ class Solution(object):
 ```
 - 设环的起始节点为 E，快慢指针从 head 出发，快指针速度为 2，设相交节点为 X，head 到 E 的距离为 H，E 到 X 的距离为 D，环的长度为 L，那么有：快指针走过的距离等于慢指针走过的距离加快指针多走的距离（多走了 n 圈的 L） 2(H + D) = H + D + nL，因此可以推出 H = nL - D，这意味着如果我们让俩个慢指针一个从 head 出发，一个从 X 出发的话，他们一定会在节点 E 相遇
 
-143.   [Reorder List](https://leetcode-cn.com/problems/reorder-list/)
+1.     [Reorder List](https://leetcode-cn.com/problems/reorder-list/)
 ```python
 class Solution:
     def _splitList(self, head):
@@ -1705,7 +1764,7 @@ class Solution:
         head = self._mergeLists(a, b)
 ```
 
-144.   [Binary Tree Preorder Traversal](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+1.     [Binary Tree Preorder Traversal](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 ```python
 def preorderTraversal(self, root):
     ret = []
@@ -1729,7 +1788,7 @@ class Solution:
 - 使用map对左右孩子分别调用,sum对list进行相加操作
 
 
-145.   [Binary Tree Postorder Traversal](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
+1.     [Binary Tree Postorder Traversal](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
 ```python
 class Solution:
     def postorderTraversal(self, root: TreeNode) -> List[int]:
@@ -1741,7 +1800,7 @@ class Solution:
             stack += root.right and [root.right] or []
         return r[::-1]
 ```
-146.     [LRU Cache](https://leetcode-cn.com/problems/lru-cache/)
+1.       [LRU Cache](https://leetcode-cn.com/problems/lru-cache/)
 ```python
 class LRUCache:
     def __init__(self, capacity: int):
@@ -1761,7 +1820,7 @@ class LRUCache:
         self.od[key] = value
 ```
 
-147. [Insertion Sort List](https://leetcode-cn.com/problems/insertion-sort-list/solution/jia-ge-tailsu-du-jiu-kuai-liao-by-powcai/)
+1.   [Insertion Sort List](https://leetcode-cn.com/problems/insertion-sort-list/solution/jia-ge-tailsu-du-jiu-kuai-liao-by-powcai/)
 ```python
 class Solution:
     def insertionSortList(self, head: ListNode) -> ListNode:
@@ -1783,7 +1842,7 @@ class Solution:
         return dummy.next
 ```
 
-148. [Sort List](https://leetcode-cn.com/problems/sort-list/)
+1.   [Sort List](https://leetcode-cn.com/problems/sort-list/)
 ```python
 class Solution:
     def sortList(self, head: ListNode) -> ListNode:
@@ -1808,7 +1867,7 @@ class Solution:
 ```
 
 
-150.     [Evaluate Reverse Polish Notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
+1.       [Evaluate Reverse Polish Notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
 ```python
 class Solution:
     def evalRPN(self, tokens: List[str]) -> int:
@@ -1833,7 +1892,7 @@ class Solution:
 - 递归地返回左右表达式操作后结果。eval 函数将字符串看作代码得到输出值
 
 
-167.   [Two Sum II - Input array is sorted](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
+1.     [Two Sum II - Input array is sorted](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
 ```python
 class Solution:
     def twoSum(self, numbers: List[int], target: int) -> List[int]:
@@ -1847,7 +1906,7 @@ class Solution:
 
 ```
 
-561.   [Array Partition I](https://leetcode-cn.com/problems/array-partition-i/)
+1.     [Array Partition I](https://leetcode-cn.com/problems/array-partition-i/)
 ```python
 class Solution:
     def arrayPairSum(self, nums: List[int]) -> int:
