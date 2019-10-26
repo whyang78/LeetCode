@@ -622,6 +622,27 @@ class Solution:
                 matrix[i][j], matrix[m-1-i][j] = matrix[m-1-i][j], matrix[i][j]
 ```
 
+51. [N-Queens](https://leetcode-cn.com/problems/n-queens/solution/hui-su-fa-by-jason-2/)
+```python
+class Solution:
+    def solveNQueens(self, n):
+        def DFS(queens, xy_dif, xy_sum):
+            p = len(queens)
+            if p == n:
+                result.append(queens)
+                return None
+            for q in range(n):  # q是每列坐标
+                if (
+                    q not in queens and p - q not in xy_dif and p + q not in xy_sum
+                ):  # 斜边条件检查(斜边坐标相减为定值,反斜边坐标相加为定值)
+                    DFS(queens + [q], xy_dif + [p - q], xy_sum + [p + q])
+
+        result = []
+        DFS([], [], [])
+        return [["." * i + "Q" + "." * (n - i - 1) for i in sol] for sol in result]
+```
+
+
 58. [Length of Last Word](https://leetcode-cn.com/problems/length-of-last-word/)
 ```python
 class Solution:
@@ -671,6 +692,39 @@ class Solution:
         p.next = None
         return head
 ```
+
+62. [Unique Paths](https://leetcode-cn.com/problems/unique-paths/)
+```python
+import math
+class Solution:
+    def uniquePaths(self, m: int, n: int) -> int:
+        return int(
+            math.factorial(m + n - 2) / math.factorial(m - 1) / math.factorial(n - 1)
+        )
+```
+- 一个m行,n列的矩阵,机器人从左上走到右下需要的步数为m+n-2,其中向下走的步数是m-1。将问题转化为求组合数$C_{m+n-2}^{m-1}$
+
+
+63. [Unique Paths II](https://leetcode-cn.com/problems/unique-paths-ii/)
+```python
+class Solution:
+    def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        if not obstacleGrid:
+            return
+        r, c = len(obstacleGrid), len(obstacleGrid[0])  # 行和列数
+        cur = [0] * c
+        cur[0] = 1 - obstacleGrid[0][0]  # 判断起始点是否有障碍(障碍处设为0,无障碍处设为1)
+        for i in range(1, c):  # 依次填充第一列
+            cur[i] = cur[i - 1] * (1 - obstacleGrid[0][i])
+        for i in range(1, r):  # 从上到下按行填充每一列
+            cur[0] *= 1 - obstacleGrid[i][0]
+            for j in range(1, c):
+                cur[j] = (cur[j - 1] + cur[j]) * (
+                    1 - obstacleGrid[i][j]
+                )  # 每一个格子的路径等于它上方和左方的路径之和,是障碍处则设为零
+        return cur[-1]
+```
+- 动态规划,机器人只可以向下和向右移动,因此每一个格子的路径等于它上方和左方的路径之和。用cur存储每一行的路径值,依次向下递推
 
 
 65. [Valid Number](https://leetcode-cn.com/problems/valid-number/)
