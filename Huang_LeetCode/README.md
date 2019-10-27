@@ -514,6 +514,25 @@ class Solution:
 - '.'可匹配任意一个除了'\n'的字符。(.) 匹配任意一个除了\n的字符并把这个匹配结果放进第一组。(.)\1 匹配一个任意字符的二次重复并把那个字符放入数组。(.)\1* 匹配一个任意字符的多次重复并把那个字符放入数组
 - group(default=0)可以取匹配文本。group(1)取第一个括号内的文本
 
+39. []()
+```python
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        res = []
+        candidates.sort()
+        self.dfs(candidates, target, 0, [], res)
+        return res
+
+    def dfs(self, nums, target, index, path, res):
+        if target < 0:
+            return
+        if target == 0:
+            res.append(path)
+            return
+        for i in range(index, len(nums)):
+            self.dfs(nums, target - nums[i], i, path + [nums[i]], res)
+```
+
 
 41. [First Missing Positive](https://leetcode-cn.com/problems/first-missing-positive/solution/que-shi-de-di-yi-ge-zheng-shu-by-leetcode/)
 ```python
@@ -642,6 +661,25 @@ class Solution:
         return [["." * i + "Q" + "." * (n - i - 1) for i in sol] for sol in result]
 ```
 
+52. [N-Queens II](https://leetcode-cn.com/problems/n-queens-ii/)
+```python
+class Solution:
+    def totalNQueens(self, n: int) -> int:
+        def DFS(queens, xy_dif, xy_sum):
+            p = len(queens)
+            if p == n:
+                result.append(queens)
+                return None
+            for q in range(n):  # q是每列坐标
+                if (
+                    q not in queens and p - q not in xy_dif and p + q not in xy_sum
+                ):  # 斜边条件检查(斜边坐标相减为定值,反斜边坐标相加为定值)
+                    DFS(queens + [q], xy_dif + [p - q], xy_sum + [p + q])
+
+        result = []
+        DFS([], [], [])
+        return len(result)
+```
 
 58. [Length of Last Word](https://leetcode-cn.com/problems/length-of-last-word/)
 ```python
@@ -1000,7 +1038,7 @@ class Solution:
         return left_dummy.next
 ```
 
-88.[Merge Sorted Array](https://leetcode-cn.com/problems/merge-sorted-array/)
+88. [Merge Sorted Array](https://leetcode-cn.com/problems/merge-sorted-array/)
 ```python
 class Solution:
     def merge(self, nums1: List[int], m: int, nums2: List[int],
@@ -1066,6 +1104,30 @@ class Solution:
 
         return dummyNode.next
 ```
+
+93. [Restore IP Addresses](https://leetcode-cn.com/problems/restore-ip-addresses/solution/bao-li-he-hui-su-by-powcai/)
+```python
+class Solution:
+    def restoreIpAddresses(self, s: str) -> List[str]:
+        res = []
+        self.dfs(s, 0, "", res)
+        return res
+
+    def dfs(self, s, index, path, res):
+        if index == 4:
+            if not s:
+                res.append(path[:-1])
+            return
+        for i in range(1, 4):
+            if i <= len(s):  # i要小于s的长度
+                if i == 1:
+                    self.dfs(s[i:], index + 1, path + s[:i] + ".", res)
+                elif i == 2 and s[0] != "0":  # 选择两个数字时,不能以0开头
+                    self.dfs(s[i:], index + 1, path + s[:i] + ".", res)
+                elif i == 3 and s[0] != "0" and int(s[:3]) <= 255:
+                    self.dfs(s[i:], index + 1, path + s[:i] + ".", res)
+```
+
 
 94. [Binary Tree Inorder Traversal](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
 ```python
