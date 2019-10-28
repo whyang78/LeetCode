@@ -318,6 +318,27 @@ class Solution:
         return dummy.next
 ```
 
+22. [Generate Parentheses](https://leetcode-cn.com/problems/generate-parentheses/solution/gua-hao-sheng-cheng-by-leetcode/)
+```python
+class Solution:
+    def generateParenthesis(self, n: int) -> List[str]:
+        ans = []
+
+        def generate(S="", left=0, right=0):
+            if len(S) == 2 * n:
+                ans.append(S)
+                return
+            if left < n:
+                generate(S + "(", left + 1, right)
+            if right < left:
+                generate(S + ")", left, right + 1)
+
+        generate()
+        return ans
+```
+
+
+
 23. [Merge k Sorted Lists](https://leetcode-cn.com/problems/merge-k-sorted-lists/solution/he-bing-kge-pai-xu-lian-biao-by-leetcode/)
 ```python
 class Solution:
@@ -466,7 +487,7 @@ class Solution:
         return -1
 ```
 
-35. []()
+35. [Search Insert Position](https://leetcode-cn.com/problems/search-insert-position/)
 ```python
 class Solution:
     def searchInsert(self, nums: List[int], target: int) -> int:
@@ -501,6 +522,48 @@ class Solution:
         return all(len(set(x)) == len(x) for x in (*row, *col, *pal))
 ```
 
+37. [Sudoku Solver](https://leetcode-cn.com/problems/sudoku-solver/)
+```python
+class Solution:
+    def solveSudoku(self, board: List[List[str]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+        row = [set(range(1, 10)) for _ in range(9)]  # 行剩余可用数字
+        col = [set(range(1, 10)) for _ in range(9)]  # 列剩余可用数字
+        block = [set(range(1, 10)) for _ in range(9)]  # 块剩余可用数字
+
+        empty = []  # 收集需填数位置
+
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] != ".":  # 更新可用数字
+                    val = int(board[i][j])
+                    row[i].remove(val)
+                    col[j].remove(val)
+                    block[(i // 3) * 3 + j // 3].remove(val)
+                else:
+                    empty.append((i, j))
+
+        def backtrack(iter=0):
+            if iter == len(empty):  # 处理完empty代表找到了答案
+                return True
+            i, j = empty[iter]
+            b = (i // 3) * 3 + j // 3
+            for val in row[i] & col[j] & block[b]:  # row、col、block中均有val可用
+                row[i].remove(val)
+                col[j].remove(val)
+                block[b].remove(val)
+                board[i][j] = str(val)
+                if backtrack(iter + 1):
+                    return True
+                row[i].add(val)  # 回溯
+                col[j].add(val)
+                block[b].add(val)
+            return False
+
+        backtrack()
+```
 
 38. [Count and Say](https://leetcode-cn.com/problems/count-and-say/)
 ```python
@@ -532,6 +595,40 @@ class Solution:
         for i in range(index, len(nums)):
             self.dfs(nums, target - nums[i], i, path + [nums[i]], res)
 ```
+
+40. [Combination Sum II](https://leetcode-cn.com/problems/combination-sum-ii/)
+```python
+class Solution:
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        size = len(candidates)
+        if size == 0:
+            return []
+        candidates.sort()
+        res = []
+
+        self.__dfs(candidates, size, 0, [], target, res)
+        return res
+
+    def __dfs(self, candidates, size, start, path, residue, res):
+        if residue == 0:
+            res.append(path[:])
+            return
+        for index in range(start, size):
+            if candidates[index] > residue:
+                break
+            # 剪枝的前提是数组升序排序
+            if index > start and candidates[index - 1] == candidates[index]:
+                continue
+
+            path.append(candidates[index])
+            # 传入index+1,当前元素不能被重复使用
+            self.__dfs(
+                candidates, size, index + 1, path, residue - candidates[index], res
+            )
+            path.pop()
+```
+
+
 
 
 41. [First Missing Positive](https://leetcode-cn.com/problems/first-missing-positive/solution/que-shi-de-di-yi-ge-zheng-shu-by-leetcode/)
