@@ -318,6 +318,27 @@ class Solution:
         return dummy.next
 ```
 
+22. [Generate Parentheses](https://leetcode-cn.com/problems/generate-parentheses/solution/gua-hao-sheng-cheng-by-leetcode/)
+```python
+class Solution:
+    def generateParenthesis(self, n: int) -> List[str]:
+        ans = []
+
+        def generate(S="", left=0, right=0):
+            if len(S) == 2 * n:
+                ans.append(S)
+                return
+            if left < n:
+                generate(S + "(", left + 1, right)
+            if right < left:
+                generate(S + ")", left, right + 1)
+
+        generate()
+        return ans
+```
+
+
+
 23. [Merge k Sorted Lists](https://leetcode-cn.com/problems/merge-k-sorted-lists/solution/he-bing-kge-pai-xu-lian-biao-by-leetcode/)
 ```python
 class Solution:
@@ -466,7 +487,7 @@ class Solution:
         return -1
 ```
 
-35. []()
+35. [Search Insert Position](https://leetcode-cn.com/problems/search-insert-position/)
 ```python
 class Solution:
     def searchInsert(self, nums: List[int], target: int) -> int:
@@ -501,6 +522,48 @@ class Solution:
         return all(len(set(x)) == len(x) for x in (*row, *col, *pal))
 ```
 
+37. [Sudoku Solver](https://leetcode-cn.com/problems/sudoku-solver/)
+```python
+class Solution:
+    def solveSudoku(self, board: List[List[str]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+        row = [set(range(1, 10)) for _ in range(9)]  # 行剩余可用数字
+        col = [set(range(1, 10)) for _ in range(9)]  # 列剩余可用数字
+        block = [set(range(1, 10)) for _ in range(9)]  # 块剩余可用数字
+
+        empty = []  # 收集需填数位置
+
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] != ".":  # 更新可用数字
+                    val = int(board[i][j])
+                    row[i].remove(val)
+                    col[j].remove(val)
+                    block[(i // 3) * 3 + j // 3].remove(val)
+                else:
+                    empty.append((i, j))
+
+        def backtrack(iter=0):
+            if iter == len(empty):  # 处理完empty代表找到了答案
+                return True
+            i, j = empty[iter]
+            b = (i // 3) * 3 + j // 3
+            for val in row[i] & col[j] & block[b]:  # row、col、block中均有val可用
+                row[i].remove(val)
+                col[j].remove(val)
+                block[b].remove(val)
+                board[i][j] = str(val)
+                if backtrack(iter + 1):
+                    return True
+                row[i].add(val)  # 回溯
+                col[j].add(val)
+                block[b].add(val)
+            return False
+
+        backtrack()
+```
 
 38. [Count and Say](https://leetcode-cn.com/problems/count-and-say/)
 ```python
@@ -513,6 +576,59 @@ class Solution:
 - re.sub(正则,替换字符串或函数,被替换字符串,是否区分大小写)
 - '.'可匹配任意一个除了'\n'的字符。(.) 匹配任意一个除了\n的字符并把这个匹配结果放进第一组。(.)\1 匹配一个任意字符的二次重复并把那个字符放入数组。(.)\1* 匹配一个任意字符的多次重复并把那个字符放入数组
 - group(default=0)可以取匹配文本。group(1)取第一个括号内的文本
+
+39. []()
+```python
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        res = []
+        candidates.sort()
+        self.dfs(candidates, target, 0, [], res)
+        return res
+
+    def dfs(self, nums, target, index, path, res):
+        if target < 0:
+            return
+        if target == 0:
+            res.append(path)
+            return
+        for i in range(index, len(nums)):
+            self.dfs(nums, target - nums[i], i, path + [nums[i]], res)
+```
+
+40. [Combination Sum II](https://leetcode-cn.com/problems/combination-sum-ii/)
+```python
+class Solution:
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        size = len(candidates)
+        if size == 0:
+            return []
+        candidates.sort()
+        res = []
+
+        self.__dfs(candidates, size, 0, [], target, res)
+        return res
+
+    def __dfs(self, candidates, size, start, path, residue, res):
+        if residue == 0:
+            res.append(path[:])
+            return
+        for index in range(start, size):
+            if candidates[index] > residue:
+                break
+            # 剪枝的前提是数组升序排序
+            if index > start and candidates[index - 1] == candidates[index]:
+                continue
+
+            path.append(candidates[index])
+            # 传入index+1,当前元素不能被重复使用
+            self.__dfs(
+                candidates, size, index + 1, path, residue - candidates[index], res
+            )
+            path.pop()
+```
+
+
 
 
 41. [First Missing Positive](https://leetcode-cn.com/problems/first-missing-positive/solution/que-shi-de-di-yi-ge-zheng-shu-by-leetcode/)
@@ -622,6 +738,46 @@ class Solution:
                 matrix[i][j], matrix[m-1-i][j] = matrix[m-1-i][j], matrix[i][j]
 ```
 
+51. [N-Queens](https://leetcode-cn.com/problems/n-queens/solution/hui-su-fa-by-jason-2/)
+```python
+class Solution:
+    def solveNQueens(self, n):
+        def DFS(queens, xy_dif, xy_sum):
+            p = len(queens)
+            if p == n:
+                result.append(queens)
+                return None
+            for q in range(n):  # q是每列坐标
+                if (
+                    q not in queens and p - q not in xy_dif and p + q not in xy_sum
+                ):  # 斜边条件检查(斜边坐标相减为定值,反斜边坐标相加为定值)
+                    DFS(queens + [q], xy_dif + [p - q], xy_sum + [p + q])
+
+        result = []
+        DFS([], [], [])
+        return [["." * i + "Q" + "." * (n - i - 1) for i in sol] for sol in result]
+```
+
+52. [N-Queens II](https://leetcode-cn.com/problems/n-queens-ii/)
+```python
+class Solution:
+    def totalNQueens(self, n: int) -> int:
+        def DFS(queens, xy_dif, xy_sum):
+            p = len(queens)
+            if p == n:
+                result.append(queens)
+                return None
+            for q in range(n):  # q是每列坐标
+                if (
+                    q not in queens and p - q not in xy_dif and p + q not in xy_sum
+                ):  # 斜边条件检查(斜边坐标相减为定值,反斜边坐标相加为定值)
+                    DFS(queens + [q], xy_dif + [p - q], xy_sum + [p + q])
+
+        result = []
+        DFS([], [], [])
+        return len(result)
+```
+
 58. [Length of Last Word](https://leetcode-cn.com/problems/length-of-last-word/)
 ```python
 class Solution:
@@ -671,6 +827,39 @@ class Solution:
         p.next = None
         return head
 ```
+
+62. [Unique Paths](https://leetcode-cn.com/problems/unique-paths/)
+```python
+import math
+class Solution:
+    def uniquePaths(self, m: int, n: int) -> int:
+        return int(
+            math.factorial(m + n - 2) / math.factorial(m - 1) / math.factorial(n - 1)
+        )
+```
+- 一个m行,n列的矩阵,机器人从左上走到右下需要的步数为m+n-2,其中向下走的步数是m-1。将问题转化为求组合数$C_{m+n-2}^{m-1}$
+
+
+63. [Unique Paths II](https://leetcode-cn.com/problems/unique-paths-ii/)
+```python
+class Solution:
+    def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        if not obstacleGrid:
+            return
+        r, c = len(obstacleGrid), len(obstacleGrid[0])  # 行和列数
+        cur = [0] * c
+        cur[0] = 1 - obstacleGrid[0][0]  # 判断起始点是否有障碍(障碍处设为0,无障碍处设为1)
+        for i in range(1, c):  # 依次填充第一列
+            cur[i] = cur[i - 1] * (1 - obstacleGrid[0][i])
+        for i in range(1, r):  # 从上到下按行填充每一列
+            cur[0] *= 1 - obstacleGrid[i][0]
+            for j in range(1, c):
+                cur[j] = (cur[j - 1] + cur[j]) * (
+                    1 - obstacleGrid[i][j]
+                )  # 每一个格子的路径等于它上方和左方的路径之和,是障碍处则设为零
+        return cur[-1]
+```
+- 动态规划,机器人只可以向下和向右移动,因此每一个格子的路径等于它上方和左方的路径之和。用cur存储每一行的路径值,依次向下递推
 
 
 65. [Valid Number](https://leetcode-cn.com/problems/valid-number/)
@@ -946,7 +1135,7 @@ class Solution:
         return left_dummy.next
 ```
 
-88.[Merge Sorted Array](https://leetcode-cn.com/problems/merge-sorted-array/)
+88. [Merge Sorted Array](https://leetcode-cn.com/problems/merge-sorted-array/)
 ```python
 class Solution:
     def merge(self, nums1: List[int], m: int, nums2: List[int],
@@ -1012,6 +1201,30 @@ class Solution:
 
         return dummyNode.next
 ```
+
+93. [Restore IP Addresses](https://leetcode-cn.com/problems/restore-ip-addresses/solution/bao-li-he-hui-su-by-powcai/)
+```python
+class Solution:
+    def restoreIpAddresses(self, s: str) -> List[str]:
+        res = []
+        self.dfs(s, 0, "", res)
+        return res
+
+    def dfs(self, s, index, path, res):
+        if index == 4:
+            if not s:
+                res.append(path[:-1])
+            return
+        for i in range(1, 4):
+            if i <= len(s):  # i要小于s的长度
+                if i == 1:
+                    self.dfs(s[i:], index + 1, path + s[:i] + ".", res)
+                elif i == 2 and s[0] != "0":  # 选择两个数字时,不能以0开头
+                    self.dfs(s[i:], index + 1, path + s[:i] + ".", res)
+                elif i == 3 and s[0] != "0" and int(s[:3]) <= 255:
+                    self.dfs(s[i:], index + 1, path + s[:i] + ".", res)
+```
+
 
 94. [Binary Tree Inorder Traversal](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
 ```python
@@ -1517,7 +1730,66 @@ class Solution:
 ```
 
 
-134.   [Gas Station](https://leetcode-cn.com/problems/gas-station/)
+130. [Surrounded Regions](https://leetcode-cn.com/problems/surrounded-regions/)
+```python
+class Solution:
+    def solve(self, board: List[List[str]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+        if not any(board):
+            return
+
+        m, n = len(board), len(board[0])
+        save = [
+            ij for k in range(m + n) for ij in ((0, k), (m - 1, k), (k, 0), (k, n - 1))
+        ]
+        # 遍历边界坐标
+        while save:
+            i, j = save.pop()
+            if 0 <= i < m and 0 <= j < n and board[i][j] == "O":
+                board[i][j] = "S"
+                save += (i, j - 1), (i, j + 1), (i - 1, j), (i + 1, j)
+
+        # 把'S'转化为'O',其他字符统一变换成'X'
+        board[:] = [["XO"[c == "S"] for c in row] for row in board]
+```
+
+131. [Palindrome Partitioning](https://leetcode-cn.com/problems/palindrome-partitioning/)
+```python
+class Solution:
+    def partition(self, s: str) -> List[List[str]]:
+        res = []
+        self.dfs(s, [], res)
+        return res
+
+    def dfs(self, s, path, res):
+        if not s:
+            res.append(path)
+            return
+        for i in range(1, len(s) + 1):
+            if self.isPal(s[:i]):
+                self.dfs(s[i:], path + [s[:i]], res)
+
+    def isPal(self, s):
+        return s == s[::-1]
+```
+- 分治,将大问题分解为小问题。在遍历切割字符串的过程中,递归求的回文串。
+
+132. [Palindrome Partitioning II](https://leetcode-cn.com/problems/palindrome-partitioning-ii/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-3-8/)
+```python
+class Solution:
+    def minCut(self, s: str) -> int:
+        cut = [x for x in range(-1, len(s))]
+        for i in range(0, len(s)):
+            for j in range(i, len(s)):
+                if s[i:j] == s[j:i:-1]:
+                    cut[j + 1] = min(cut[j + 1], cut[i] + 1)
+        return cut[-1]
+```
+
+
+133.   [Gas Station](https://leetcode-cn.com/problems/gas-station/)
 ```python
 class Solution:
     def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
@@ -1534,7 +1806,7 @@ class Solution:
 ```
 
 
-135.   [Candy](https://leetcode-cn.com/problems/candy/)
+1.     [Candy](https://leetcode-cn.com/problems/candy/)
 ```python
 class Solution:
     def candy(self, ratings: List[int]) -> int:
@@ -1553,7 +1825,7 @@ class Solution:
         return sum(res)
 ```
 
-136.   [Single Number](https://leetcode-cn.com/problems/single-number/submissions/)
+1.     [Single Number](https://leetcode-cn.com/problems/single-number/submissions/)
 ```python
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:
@@ -1563,7 +1835,7 @@ class Solution:
         return x
 ```
 
-137.   [Single Number II](https://leetcode-cn.com/problems/single-number-ii/)
+1.     [Single Number II](https://leetcode-cn.com/problems/single-number-ii/)
 ```python
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:
@@ -1572,7 +1844,7 @@ class Solution:
 
 
 
-138.   [Copy List with Random Pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)
+1.     [Copy List with Random Pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)
 ```python
 class Solution:
     def copyRandomList(self, head: 'Node') -> 'Node':
@@ -1592,7 +1864,7 @@ class Solution:
      2. 或者通过在原链表上添加节点,最后拆分的方法完成题目要求
    
 
-141.   [Linked List Cycle](https://leetcode-cn.com/problems/linked-list-cycle/)
+1.     [Linked List Cycle](https://leetcode-cn.com/problems/linked-list-cycle/)
 ```python
 class Solution(object):
     def hasCycle(self, head):
@@ -1617,7 +1889,7 @@ class Solution(object):
 
         return head != None
 ```
-142.   [Linked List Cycle II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
+1.     [Linked List Cycle II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
 ```python
 class Solution(object):
     def detectCycle(self, head):
@@ -1650,7 +1922,7 @@ class Solution(object):
 ```
 - 设环的起始节点为 E，快慢指针从 head 出发，快指针速度为 2，设相交节点为 X，head 到 E 的距离为 H，E 到 X 的距离为 D，环的长度为 L，那么有：快指针走过的距离等于慢指针走过的距离加快指针多走的距离（多走了 n 圈的 L） 2(H + D) = H + D + nL，因此可以推出 H = nL - D，这意味着如果我们让俩个慢指针一个从 head 出发，一个从 X 出发的话，他们一定会在节点 E 相遇
 
-143.   [Reorder List](https://leetcode-cn.com/problems/reorder-list/)
+1.     [Reorder List](https://leetcode-cn.com/problems/reorder-list/)
 ```python
 class Solution:
     def _splitList(self, head):
@@ -1705,7 +1977,7 @@ class Solution:
         head = self._mergeLists(a, b)
 ```
 
-144.   [Binary Tree Preorder Traversal](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+1.     [Binary Tree Preorder Traversal](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 ```python
 def preorderTraversal(self, root):
     ret = []
@@ -1729,7 +2001,7 @@ class Solution:
 - 使用map对左右孩子分别调用,sum对list进行相加操作
 
 
-145.   [Binary Tree Postorder Traversal](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
+1.     [Binary Tree Postorder Traversal](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
 ```python
 class Solution:
     def postorderTraversal(self, root: TreeNode) -> List[int]:
@@ -1741,7 +2013,7 @@ class Solution:
             stack += root.right and [root.right] or []
         return r[::-1]
 ```
-146.     [LRU Cache](https://leetcode-cn.com/problems/lru-cache/)
+1.       [LRU Cache](https://leetcode-cn.com/problems/lru-cache/)
 ```python
 class LRUCache:
     def __init__(self, capacity: int):
@@ -1761,7 +2033,7 @@ class LRUCache:
         self.od[key] = value
 ```
 
-147. [Insertion Sort List](https://leetcode-cn.com/problems/insertion-sort-list/solution/jia-ge-tailsu-du-jiu-kuai-liao-by-powcai/)
+1.   [Insertion Sort List](https://leetcode-cn.com/problems/insertion-sort-list/solution/jia-ge-tailsu-du-jiu-kuai-liao-by-powcai/)
 ```python
 class Solution:
     def insertionSortList(self, head: ListNode) -> ListNode:
@@ -1783,7 +2055,7 @@ class Solution:
         return dummy.next
 ```
 
-148. [Sort List](https://leetcode-cn.com/problems/sort-list/)
+1.   [Sort List](https://leetcode-cn.com/problems/sort-list/)
 ```python
 class Solution:
     def sortList(self, head: ListNode) -> ListNode:
@@ -1808,7 +2080,7 @@ class Solution:
 ```
 
 
-150.     [Evaluate Reverse Polish Notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
+1.       [Evaluate Reverse Polish Notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
 ```python
 class Solution:
     def evalRPN(self, tokens: List[str]) -> int:
@@ -1833,7 +2105,7 @@ class Solution:
 - 递归地返回左右表达式操作后结果。eval 函数将字符串看作代码得到输出值
 
 
-167.   [Two Sum II - Input array is sorted](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
+1.     [Two Sum II - Input array is sorted](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
 ```python
 class Solution:
     def twoSum(self, numbers: List[int], target: int) -> List[int]:
@@ -1847,7 +2119,7 @@ class Solution:
 
 ```
 
-561.   [Array Partition I](https://leetcode-cn.com/problems/array-partition-i/)
+1.     [Array Partition I](https://leetcode-cn.com/problems/array-partition-i/)
 ```python
 class Solution:
     def arrayPairSum(self, nums: List[int]) -> int:
