@@ -201,3 +201,84 @@ public:
 };
 ```
 
+## 102. Binary Tree Level Order Traversal
+
+![image-20191028155644966](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\image-20191028155644966.png)
+
+解题思路：
+
+这题是二叉树的层次遍历，其实有两种方法都可以实现二叉树的层次遍历，BFS（广度优先搜索）， DFS(深度优先搜索), 使用深度优先搜索是一种递归的写法，代码看起来更加的简洁。
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        // BFS 
+        if (!root) return {};
+        vector<vector<int>> ans;
+        // curr 和 next 分别表示的是当前遍历的这一层，和下一次将要遍历的层 
+        vector<TreeNode*> curr, next;
+        curr.push_back(root);
+        while(!curr.empty())
+        {
+            // 动态的增加一行
+            ans.push_back({});
+            for(TreeNode* node : curr)
+            {
+                // 每次都是最后一行添加元素
+                ans.back().push_back(node->val);
+                // 每次添加完一个元素之后都判断其左边和右边是否还有元素，有的话，先添加左边在添加右边
+                if (node->left) next.push_back(node->left);
+                if (node->right) next.push_back(node->right);
+            }
+            swap(curr, next);
+            next.clear();
+        }
+        
+        return ans;
+    }
+};
+```
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        // DFS
+        vector<vector<int>> ans;
+        levelOrder(root, 0, ans);
+        
+        return ans;
+    }
+    
+    void levelOrder(TreeNode* root, int depth, vector<vector<int>>& ans)
+    {
+        if (!root) return;
+        while(ans.size() <= depth) ans.push_back({});
+        ans[depth].push_back(root->val);
+        levelOrder(root->left, depth + 1, ans);
+        levelOrder(root->right, depth + 1, ans);
+    }
+};
+```
+
+
+
