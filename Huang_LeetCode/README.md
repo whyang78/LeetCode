@@ -738,6 +738,20 @@ class Solution:
                 matrix[i][j], matrix[m-1-i][j] = matrix[m-1-i][j], matrix[i][j]
 ```
 
+50. [Pow(x, n)](https://leetcode-cn.com/problems/powx-n/)
+```python
+class Solution:
+    def myPow(self, x: float, n: int) -> float:
+        if not n:
+            return 1
+        elif n < 0:
+            return 1 / self.myPow(x, -n)
+        elif n % 2:
+            return x * self.myPow(x, n-1)
+        return self.myPow(x*x, n/2)
+```
+
+
 51. [N-Queens](https://leetcode-cn.com/problems/n-queens/solution/hui-su-fa-by-jason-2/)
 ```python
 class Solution:
@@ -906,6 +920,19 @@ class Solution:
 ```
 - 模拟二进制加法
 
+
+
+69. [Sqrt(x)](https://leetcode-cn.com/problems/sqrtx/)
+```python
+class Solution:
+    def mySqrt(self, x: int) -> int:
+        r = x
+        while r*r > x:
+            r = (r+x/r)//2
+        return int(r)
+```
+- 基本不等式$(a+b)/2>=\sqrt{ab}$
+
 70. [Climbing Stairs](https://leetcode-cn.com/problems/climbing-stairs/)
 ```python
 class Solution:
@@ -1024,6 +1051,32 @@ class Solution:
         return sum([list(combinations(nums, i)) for i in range(len(nums) + 1)],
                    [])
 ```
+
+79. [Word Search](https://leetcode-cn.com/problems/word-search/)
+```python
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        if not board:
+            return False
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if self.dfs(board, i, j, word):
+                    return True
+        return False
+
+    def dfs(self, board, i, j, word):
+        if len(word) == 0:
+            return True
+        if i < 0 or i >= len(board) or j < 0 or j >= len(
+                board[0]) or word[0] != board[i][j]:
+            return False
+        tmp = board[i][j]
+        board[i][j] = "#"
+        res = self.dfs(board, i+1, j, word[1:]) or self.dfs(board, i-1, j, word[1:]) or self.dfs(board, i, j+1, word[1:]) or self.dfs(board, i, j-1, word[1:])
+        board[i][j] = tmp
+        return res
+```
+
 
 80. [Remove Duplicates from Sorted Array II](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii)
 ```python
