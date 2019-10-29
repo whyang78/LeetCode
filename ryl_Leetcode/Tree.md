@@ -280,5 +280,62 @@ public:
 };
 ```
 
+## 112. Path Sum
 
+![image-20191029161328941](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\image-20191029161328941.png)
+
+**解题思路：**
+
+这道题是求解一个从根节点到叶子节点的某一条路径上的所有节点的和加起来为某个数。可以使用递归的方法，每次在访问了一个节点之后将sum减去这个节点的值作为新的sum，然后分别递归左子树和右子树。当且仅当访问的叶子节点（左右子树都为空）时sum的值等于当前节点的值说明存在一个path满足题意。
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int sum) {
+        if(!root) return false;
+        if(!root->left && !root->right) return root->val == sum;
+        int new_sum = sum - root->val;
+        
+        return hasPathSum(root->left, new_sum) || hasPathSum(root->right, new_sum);
+    }
+};
+```
+
+## 226. Invert Binary Tree
+
+![image-20191029162225212](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\image-20191029162225212.png)
+
+解题思路：
+
+逆转二叉树，从题意可以看出就是将二叉树的左右子树进行反转。只需要使用递归的方法将左右子节点分别进行逆转就可以。
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if(!root) return 0;
+        swap(root->left, root->right);
+        invertTree(root->left), invertTree(root->right);
+        return root;
+    }
+};
+```
 
