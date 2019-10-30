@@ -339,3 +339,80 @@ public:
 };
 ```
 
+## 111. Minimun Depth of Binary Tree
+
+![image-20191030144432893](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\image-20191030144432893.png)
+
+解题思路：
+
+首先需要理解什么是叶子节点，叶子节点指的是，左右孩子都为空节点。这道题与求解树的最大深度不一样，求解树的最大深度，每次遍历的时候只要左右孩子有一个不为空就继续迭代，并且每次迭代深度加1 ，但是这里求解树的最小深度迭代的停止条件是左右孩子节点同时为空。但是为了编程方便，直接求左子树和右子树的最小深度，
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if (!root) return 0;
+        int left = minDepth(root->left);
+        int right = minDepth(root->right);
+        // 左右子树有一个子树深度为0，此时应该返回更深的那一个分支
+        // 左右子树的深度同时为零，说明此时到达了叶子节点应该返回较小的那一边
+        if (left == 0 || right == 0)
+            return 1 + max(left, right);
+        else
+            return 1 + min(left, right);
+    }
+};
+```
+
+
+
+## 235. Lowest common Ancestor of a Binary Search Tree
+
+![image-20191030145507929](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\image-20191030145507929.png)
+
+解题思路：
+
+首先需要知道什么是二叉搜索树，二叉搜索树又叫做二叉排序树，具体的特征就是，根节点的左子树上的所有元素都小于等于根节点上的值，右子树上的所有节点的值都大于等于根节点上的值。
+
+这道题是随机给定一个二叉搜索树的两个子节点，求解这两个子节点的最近公共祖先，首先对于根节点来说，肯定是可能的最近公共祖先，然后判断根节点上的值是否大于给定两个子节点的值，是的话说明最近公共祖先在当前根节点的左子树中，反之在当前根节点的右子树中。
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        TreeNode* curr = root;
+        while(1)
+        {
+            // 两个节点同时在左子树上
+            if (p->val < curr->val && q->val < curr->val) 
+                curr = curr->left;
+            // 两个节点同时在右子树上
+            else if (p->val > curr->val && q->val > curr->val)
+                curr = curr->right;
+            // 如果不是同时在左子树上或者同时在右子树上，说明在当前根节点的两边，所以当前节点就是最近公共祖先
+            else break;
+        }
+        
+        return curr;
+    }
+};
+```
+
