@@ -693,8 +693,24 @@ class Solution:
 ```
 - '?' 可以匹配任何单个字符。'*' 可以匹配任意字符串（包括空字符串）。
 
+45. [Jump Game II](https://leetcode-cn.com/problems/jump-game-ii/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-10/)
+```python
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        n, start, end, step = len(nums), 0, 0, 0
+        while end < n - 1:
+            step += 1
+            maxend = end + 1
+            for i in range(start, end + 1):
+                if i + nums[i] >= n - 1:
+                    return step
+                maxend = max(maxend, i + nums[i])
+            start, end = end + 1, maxend
+        return step
+```
+46. []
 
-46. [Permutations](https://leetcode-cn.com/problems/permutations/)
+47. [Permutations](https://leetcode-cn.com/problems/permutations/)
 ```python
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
@@ -791,6 +807,20 @@ class Solution:
         DFS([], [], [])
         return len(result)
 ```
+
+
+55. [Jump Game](https://leetcode-cn.com/problems/jump-game/)
+```python
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        m = 0
+        for i, n in enumerate(nums):
+            if i > m:
+                return False
+            m = max(m, i + n)
+        return True
+```
+
 
 58. [Length of Last Word](https://leetcode-cn.com/problems/length-of-last-word/)
 ```python
@@ -1639,6 +1669,18 @@ class Solution:
     1. 没有子节点:直接返回
     2. 一个子节点：将这个子节点的 next 属性设置为同层的下一个节点，即为 root.next 的最左边的一个节点，如果 root.next 没有子节点，则考虑 root.next.next，依次类推
     3. 两个子节点:左子节点指向右子节点，然后右子节点同第二种情况的做法
+
+
+121.[Best Time to Buy and Sell Stock](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
+```python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        max_profit, min_price = 0, float('inf')
+        for price in prices:
+            max_profit, min_price = max(max_profit, price - min_price), min(
+                min_price, price)
+        return max_profit
+```
 
 124. [Binary Tree Maximum Path Sum](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
 ```python
