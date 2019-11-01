@@ -114,3 +114,105 @@ int main()
 }
 ```
 
+## 3. 归并排序
+
+![image-20191101195803176](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\image-20191101195803176.png)
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 100010;
+int q[N], temp[N];
+
+void merge_sort(int q[], int l, int r)
+{
+    if(l >= r) return;
+    int mid = l + r >> 1;
+
+    merge_sort(q, l, mid), merge_sort(q, mid + 1, r);
+    
+    int i = l, j = mid + 1, k = 0;
+    while(i <= mid && j <= r)
+    {
+        if(q[i] <= q[j]) temp[k++] = q[i++];
+        else temp[k++] = q[j++];
+    }
+    
+    while(i <= mid) temp[k++] = q[i++];
+    while(j <= r) temp[k++] = q[j++];
+    
+    for(i = l, j = 0; i <= r; i++, j++) q[i] = temp[j];
+}
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+    
+    for(int i = 0; i < n; i++) scanf("%d", &q[i]);
+    
+    merge_sort(q, 0, n - 1);
+    
+    for(int i = 0; i < n; i++) printf("%d ", q[i]);
+    
+    return 0;    
+}
+```
+
+## 4. 逆序对的数量
+
+![image-20191101202339728](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\image-20191101202339728.png)
+
+```cpp
+#include <iostream>
+typedef long long LL;
+
+using namespace std;
+const int N = 100010;
+int q[N], tmp[N];
+
+LL merge_sort(int l, int r)
+{
+    if(l >= r) return 0;
+    
+    int mid = l + r >> 1;
+    // 求分界点左边和右边的逆序对
+    LL res = merge_sort(l, mid) + merge_sort(mid + 1, r);
+    
+    int k = 0, i = l, j = mid + 1;
+    while(i <= mid && j <= r)
+    {
+        // 逆序对的定义
+        if(q[i] <= q[j]) tmp[k++] = q[i++];
+        else
+        {
+            // 求逆序对分布在归并的数组的左右两边
+            tmp[k++] = q[j++];
+            res += mid - i + 1;
+        }
+    }
+    
+    while(i <= mid) tmp[k++] = q[i++];
+    while(j <= r) tmp[k++] = q[j++];
+    
+    // 将排序好的元素放回原始数组中 i的范围是从l~r
+    for(i = l, j = 0; i <= r; i++, j++) q[i] = tmp[j];
+    return res;
+}
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+    
+    for(int i = 0; i < n; i ++) scanf("%d", &q[i]);
+    
+    cout << merge_sort(0 ,n - 1) << endl;
+    
+    return 0;
+}
+```
+
+
+
