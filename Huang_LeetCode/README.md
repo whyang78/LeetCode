@@ -137,6 +137,22 @@ class Solution:
     - 如果字符串第一个字符和模式中的第一个字符不匹配,直接返回False
 
 
+11. [Container With Most Water](https://leetcode-cn.com/problems/container-with-most-water/solution/sheng-zui-duo-shui-de-rong-qi-by-leetcode/)
+```python
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        res, left, right = 0, 0, len(height) - 1
+        while left < right:
+            res, left, right = (max(res, height[left] * (right - left)),
+                                left + 1,
+                                right) if height[left] < height[right] else (
+                                    max(res, height[right] * (right - left)),
+                                    left, right - 1)
+        return res
+```
+- 双指针，从两端向中间遍历，用res存贮最大面积，较短指针移向较长指针
+
+
 12. [Integer to Roman](https://leetcode-cn.com/problems/integer-to-roman/)
 ```python
 # 字符          数值
@@ -807,6 +823,16 @@ class Solution:
         DFS([], [], [])
         return len(result)
 ```
+
+53. [Maximum Subarray](https://leetcode-cn.com/problems/maximum-subarray/)
+```python
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        for i in range(1, len(nums)):
+            nums[i] = max(nums[i], nums[i] + nums[i - 1])
+        return max(nums)
+```
+54. []()
 
 
 55. [Jump Game](https://leetcode-cn.com/problems/jump-game/)
@@ -1671,7 +1697,27 @@ class Solution:
     3. 两个子节点:左子节点指向右子节点，然后右子节点同第二种情况的做法
 
 
-121. [Best Time to Buy and Sell Stock](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
+
+120. [Triangle](https://leetcode-cn.com/problems/triangle/)
+```python
+class Solution:
+    def minimumTotal(self, triangle: List[List[int]]) -> int:
+        if not triangle:
+            return
+        res = triangle[-1]  # 保存每行结果
+
+        # 自底向上，从倒数第二行开始遍历
+        for i in range(len(triangle) - 2, -1, -1):
+            for j in range(len(triangle[i])):
+                res[j] = min(res[j], res[j + 1]) + triangle[i][j]
+        return res[0]
+```
+
+121. []()
+
+
+
+122. [Best Time to Buy and Sell Stock](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
 ```python
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
@@ -1682,7 +1728,7 @@ class Solution:
         return max_profit
 ```
 
-122. [Best Time to Buy and Sell Stock II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
+1.   [Best Time to Buy and Sell Stock II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 ```python
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
@@ -1690,7 +1736,7 @@ class Solution:
 ```
 - 把连续上升拆分成多个上升,当明天的价格大于今天的价格就会产生利润，循环内计算的就是每次变化获取到的利润。
 
-123. [Best Time to Buy and Sell Stock III](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/)
+1.   [Best Time to Buy and Sell Stock III](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/)
 ```python
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
@@ -1708,7 +1754,7 @@ class Solution:
 ```
 
 
-124. [Binary Tree Maximum Path Sum](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
+1.   [Binary Tree Maximum Path Sum](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
 ```python
 class Solution:
     def maxPathSum(self, root: TreeNode) -> int:
