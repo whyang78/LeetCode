@@ -137,6 +137,22 @@ class Solution:
     - 如果字符串第一个字符和模式中的第一个字符不匹配,直接返回False
 
 
+11. [Container With Most Water](https://leetcode-cn.com/problems/container-with-most-water/solution/sheng-zui-duo-shui-de-rong-qi-by-leetcode/)
+```python
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        res, left, right = 0, 0, len(height) - 1
+        while left < right:
+            res, left, right = (max(res, height[left] * (right - left)),
+                                left + 1,
+                                right) if height[left] < height[right] else (
+                                    max(res, height[right] * (right - left)),
+                                    left, right - 1)
+        return res
+```
+- 双指针，从两端向中间遍历，用res存贮最大面积，较短指针移向较长指针
+
+
 12. [Integer to Roman](https://leetcode-cn.com/problems/integer-to-roman/)
 ```python
 # 字符          数值
@@ -693,8 +709,24 @@ class Solution:
 ```
 - '?' 可以匹配任何单个字符。'*' 可以匹配任意字符串（包括空字符串）。
 
+45. [Jump Game II](https://leetcode-cn.com/problems/jump-game-ii/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-10/)
+```python
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        n, start, end, step = len(nums), 0, 0, 0
+        while end < n - 1:
+            step += 1
+            maxend = end + 1
+            for i in range(start, end + 1):
+                if i + nums[i] >= n - 1:
+                    return step
+                maxend = max(maxend, i + nums[i])
+            start, end = end + 1, maxend
+        return step
+```
+46. []
 
-46. [Permutations](https://leetcode-cn.com/problems/permutations/)
+47. [Permutations](https://leetcode-cn.com/problems/permutations/)
 ```python
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
@@ -791,6 +823,30 @@ class Solution:
         DFS([], [], [])
         return len(result)
 ```
+
+53. [Maximum Subarray](https://leetcode-cn.com/problems/maximum-subarray/)
+```python
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        for i in range(1, len(nums)):
+            nums[i] = max(nums[i], nums[i] + nums[i - 1])
+        return max(nums)
+```
+54. []()
+
+
+55. [Jump Game](https://leetcode-cn.com/problems/jump-game/)
+```python
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        m = 0
+        for i, n in enumerate(nums):
+            if i > m:
+                return False
+            m = max(m, i + n)
+        return True
+```
+
 
 58. [Length of Last Word](https://leetcode-cn.com/problems/length-of-last-word/)
 ```python
@@ -1640,7 +1696,65 @@ class Solution:
     2. 一个子节点：将这个子节点的 next 属性设置为同层的下一个节点，即为 root.next 的最左边的一个节点，如果 root.next 没有子节点，则考虑 root.next.next，依次类推
     3. 两个子节点:左子节点指向右子节点，然后右子节点同第二种情况的做法
 
-124. [Binary Tree Maximum Path Sum](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
+
+
+120. [Triangle](https://leetcode-cn.com/problems/triangle/)
+```python
+class Solution:
+    def minimumTotal(self, triangle: List[List[int]]) -> int:
+        if not triangle:
+            return
+        res = triangle[-1]  # 保存每行结果
+
+        # 自底向上，从倒数第二行开始遍历
+        for i in range(len(triangle) - 2, -1, -1):
+            for j in range(len(triangle[i])):
+                res[j] = min(res[j], res[j + 1]) + triangle[i][j]
+        return res[0]
+```
+
+121. []()
+
+
+
+122. [Best Time to Buy and Sell Stock](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
+```python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        max_profit, min_price = 0, float('inf')
+        for price in prices:
+            max_profit, min_price = max(max_profit, price - min_price), min(
+                min_price, price)
+        return max_profit
+```
+
+1.   [Best Time to Buy and Sell Stock II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
+```python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        return sum(b - a for a, b in zip(prices, prices[1:]) if b > a)
+```
+- 把连续上升拆分成多个上升,当明天的价格大于今天的价格就会产生利润，循环内计算的就是每次变化获取到的利润。
+
+1.   [Best Time to Buy and Sell Stock III](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/)
+```python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        if not prices:
+            return 0
+        n = len(prices)
+        # 状态转移方程 dp[k][i]:到底i天经过k次交易得到的最大利润
+        dp = [[0] * n for _ in range(3)]
+        for k in range(1, 3):  # k 为交易次数
+            pre_max = -prices[0]  # 处理边界情况
+            for i in range(1, n):  # i 为交易天数
+                pre_max = max(pre_max, dp[k - 1][i - 1] - prices[i])
+                dp[k][i] = max(dp[k][i - 1], prices[i] + pre_max)
+        return dp[-1][-1]
+```
+
+
+1.   [Binary Tree Maximum Path Sum](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
 ```python
 class Solution:
     def maxPathSum(self, root: TreeNode) -> int:
@@ -1658,7 +1772,7 @@ class Solution:
 ```
 
 
-125.   [Valid Palindrome](https://leetcode-cn.com/problems/valid-palindrome/)
+1.     [Valid Palindrome](https://leetcode-cn.com/problems/valid-palindrome/)
 ```python
 class Solution:
     def isPalindrome(self, s: str) -> bool:
@@ -1675,7 +1789,7 @@ class Solution:
         return True
 ```
 
-126. [Word Ladder II](https://leetcode-cn.com/problems/word-ladder-ii/solution/bfs-level-order-traverse-by-matrix95/)
+1.   [Word Ladder II](https://leetcode-cn.com/problems/word-ladder-ii/solution/bfs-level-order-traverse-by-matrix95/)
 ```python
 import collections
 import string
@@ -1706,7 +1820,7 @@ class Solution:
 - 递归输出res
 
 
-127. [Word Ladder](https://leetcode-cn.com/problems/word-ladder/solution/dan-ci-jie-long-by-leetcode/)
+1.   [Word Ladder](https://leetcode-cn.com/problems/word-ladder/solution/dan-ci-jie-long-by-leetcode/)
 ```python
 from collections import deque
 class Solution(object):
@@ -1741,7 +1855,7 @@ class Solution(object):
 - 将问题抽象在一个无向无权图中，每个单词作为节点，差距只有一个字母的两个单词之间连一条边。问题变成找到从起点到终点的最短路径
 - 算法中最重要的步骤是找出相邻的节点，也就是只差一个字母的两个单词。为了快速的找到这些相邻节点，我们对给定的 wordList 做一个预处理，将单词中的某个字母用 '-' 代替
 
-128.   [Longest Consecutive Sequence](https://leetcode-cn.com/problems/longest-consecutive-sequence/)
+1.     [Longest Consecutive Sequence](https://leetcode-cn.com/problems/longest-consecutive-sequence/)
 ```python
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
@@ -1763,7 +1877,7 @@ class Solution:
         return longest
 ```
 
-129. [Sum Root to Leaf Numbers](https://leetcode-cn.com/problems/sum-root-to-leaf-numbers/)
+1.   [Sum Root to Leaf Numbers](https://leetcode-cn.com/problems/sum-root-to-leaf-numbers/)
 ```python
 class Solution:
     def sumNumbers(self, root: TreeNode) -> int:
@@ -1783,7 +1897,7 @@ class Solution:
 ```
 
 
-130. [Surrounded Regions](https://leetcode-cn.com/problems/surrounded-regions/)
+1.   [Surrounded Regions](https://leetcode-cn.com/problems/surrounded-regions/)
 ```python
 class Solution:
     def solve(self, board: List[List[str]]) -> None:
@@ -1808,7 +1922,7 @@ class Solution:
         board[:] = [["XO"[c == "S"] for c in row] for row in board]
 ```
 
-131. [Palindrome Partitioning](https://leetcode-cn.com/problems/palindrome-partitioning/)
+1.   [Palindrome Partitioning](https://leetcode-cn.com/problems/palindrome-partitioning/)
 ```python
 class Solution:
     def partition(self, s: str) -> List[List[str]]:
@@ -1829,7 +1943,7 @@ class Solution:
 ```
 - 分治,将大问题分解为小问题。在遍历切割字符串的过程中,递归求的回文串。
 
-132. [Palindrome Partitioning II](https://leetcode-cn.com/problems/palindrome-partitioning-ii/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-3-8/)
+1.   [Palindrome Partitioning II](https://leetcode-cn.com/problems/palindrome-partitioning-ii/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-3-8/)
 ```python
 class Solution:
     def minCut(self, s: str) -> int:
@@ -1842,7 +1956,7 @@ class Solution:
 ```
 
 
-133.   [Gas Station](https://leetcode-cn.com/problems/gas-station/)
+1.     [Gas Station](https://leetcode-cn.com/problems/gas-station/)
 ```python
 class Solution:
     def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
