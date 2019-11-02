@@ -1220,6 +1220,34 @@ class Solution:
         return ans
 ```
 
+85. [Maximal Rectangle](https://leetcode-cn.com/problems/maximal-rectangle/)
+```python
+class Solution:
+    def maximalRectangle(self, matrix: List[List[str]]) -> int:
+        if not matrix or not matrix[0]:
+            return 0
+        # 将每一行看做一个二进制数,然后转化为一个整数
+        nums = [int(''.join(row), base=2) for row in matrix]
+        ans, N = 0, len(nums)
+        # 遍历所有行
+        for i in range(N):
+            j, num = i, nums[i]
+            # 将第i行和接下来所有行做与运算,保留二进制中所有行均有'1'的位置
+            while j < N:
+                # 经过与运算后，num转化为二进制中的1，表示从i到j行，可以组成一个矩形的那几列
+                num = num & nums[j]
+                if not num:
+                    break
+                l, curnum = 0, num  # l表示有效宽度
+                while curnum:
+                    l += 1
+                    curnum = curnum & (curnum << 1)
+                ans = max(ans, l * (j - i + 1))
+                j += 1
+        return ans
+```
+
+
 
 86. [Partition List](https://leetcode-cn.com/problems/partition-list/)
 ```python
@@ -1397,7 +1425,30 @@ def numTrees(self, n):
 
 
 
-98. []()
+
+97. [Interleaving String](https://leetcode-cn.com/problems/interleaving-string/)
+```python
+class Solution:
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        r, c, l = len(s1), len(s2), len(s3)
+        if r + c != l:  # 长度不匹配
+            return False
+
+        dp = [True for _ in range(c + 1)]
+
+        for j in range(1, c + 1):
+            dp[j] = dp[j - 1] and s2[j - 1] == s3[j - 1]
+
+        for i in range(1, r + 1):
+            dp[0] = (dp[0] and s1[i - 1] == s3[i - 1])
+            for j in range(1, c + 1):
+                dp[j] = (dp[j] and s1[i - 1] == s3[i - 1 + j]) or (
+                    dp[j - 1] and s2[j - 1] == s3[i - 1 + j])
+
+        return dp[-1]
+```
+
+98. [Validate Binary Search Tree](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 ```python
 class Solution:
     def isValidBST(self, root: TreeNode) -> bool:
