@@ -2,7 +2,7 @@
 
 ## 100. Same Tree
 
-![same_tree](img/100.jpg)
+![same_tree](./img/100.jpg )
 
 解题思路：
 
@@ -30,7 +30,7 @@ public:
 
 ## 101. Symmetric Tree
 
-![symmetric_tree](img/101.jpg)
+![symmetric_tree](./img/101.jpg)
 
 解题思路：
 
@@ -61,7 +61,7 @@ public:
 
 ## 104. Maximum Depth of Binary Tree
 
-![MDBT](img/104.jpg)
+![MDBT](./img/104.jpg)
 
 解题思路：
 
@@ -88,7 +88,7 @@ public:
 
 ## 144. Binary Tree Preorder Traversal
 
-![BTPT](img/144.jpg)
+![BTPT](./img/144.jpg)
 
 **解题思路：**
 
@@ -158,7 +158,7 @@ public:
 
 ## 94. Binary Tree Inorder Traversal
 
-![94](img/94.jpg)
+![94](./img/94.jpg)
 
 **解题思路：**
 
@@ -233,7 +233,7 @@ public:
 
 ## 145. Binary Tree Posterorder Traversal
 
-![BTPT](img/145.jpg)
+![BTPT](./img/145.jpg)
 
 **解题思路：**
 
@@ -271,7 +271,7 @@ public:
 
 ## 102. Binary Tree Level Order Traversal
 
-![image-20191028155644966](img/102.jpg)
+![image-20191028155644966](./img/102.jpg)
 
 解题思路：
 
@@ -357,7 +357,7 @@ public:
 
 ## 112. Path Sum
 
-![PS](img/112.jpg)
+![PS](./img/112.jpg)
 
 **解题思路：**
 
@@ -387,7 +387,7 @@ public:
 
 ## 226. Invert Binary Tree
 
-![IBT](img/226.jpg)
+![IBT](./img/226.jpg)
 
 解题思路：
 
@@ -416,7 +416,7 @@ public:
 
 ## 111. Minimun Depth of Binary Tree
 
-![MDBT](img/111.jpg)
+![MDBT](./img/111.jpg)
 
 解题思路：
 
@@ -452,7 +452,7 @@ public:
 
 ## 235. Lowest common Ancestor of a Binary Search Tree
 
-![LABST](img/235.jpg)
+![LABST](./img/235.jpg)
 
 解题思路：
 
