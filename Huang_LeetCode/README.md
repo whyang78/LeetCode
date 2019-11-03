@@ -932,6 +932,27 @@ class Solution:
 - 动态规划,机器人只可以向下和向右移动,因此每一个格子的路径等于它上方和左方的路径之和。用cur存储每一行的路径值,依次向下递推
 
 
+
+64. [Minimum Path Sum](https://leetcode-cn.com/problems/minimum-path-sum/)
+```python
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        m, n = len(grid), len(grid) and len(grid[0])
+
+        for i in range(1, n):  # 遍历第一行
+            grid[0][i] += grid[0][i - 1]
+
+        for i in range(1, m):  # 遍历第一列
+            grid[i][0] += grid[i - 1][0]
+
+        for i in range(1, m):
+            for j in range(1, n):
+                grid[i][j] += min(grid[i - 1][j], grid[i][j - 1])
+
+        return grid[-1][-1]
+```
+
+
 65. [Valid Number](https://leetcode-cn.com/problems/valid-number/)
 ```python
 class Solution:
@@ -1011,6 +1032,23 @@ class Solution:
             else:
                 stack.append(token)
         return '/' + '/'.join(stack)
+```
+
+72. [Edit Distance](https://leetcode-cn.com/problems/edit-distance/)
+```python
+class Solution:
+    def minDistance(self, word1: str, word2: str) -> int:
+        l1, l2 = len(word1) + 1, len(word2) + 1
+        pre = [0 for _ in range(l2)]
+        for j in range(l2):
+            pre[j] = j
+        for i in range(1, l1):
+            cur = [i] * l2
+            for j in range(1, l2):
+                cur[j] = min(cur[j - 1] + 1, pre[j] + 1,
+                             pre[j - 1] + (word1[i - 1] != word2[j - 1]))
+            pre = cur[:]
+        return pre[-1]
 ```
 
 73. [Set Matrix Zeroes](https://leetcode-cn.com/problems/set-matrix-zeroes/)
@@ -1220,6 +1258,34 @@ class Solution:
         return ans
 ```
 
+85. [Maximal Rectangle](https://leetcode-cn.com/problems/maximal-rectangle/)
+```python
+class Solution:
+    def maximalRectangle(self, matrix: List[List[str]]) -> int:
+        if not matrix or not matrix[0]:
+            return 0
+        # 将每一行看做一个二进制数,然后转化为一个整数
+        nums = [int(''.join(row), base=2) for row in matrix]
+        ans, N = 0, len(nums)
+        # 遍历所有行
+        for i in range(N):
+            j, num = i, nums[i]
+            # 将第i行和接下来所有行做与运算,保留二进制中所有行均有'1'的位置
+            while j < N:
+                # 经过与运算后，num转化为二进制中的1，表示从i到j行，可以组成一个矩形的那几列
+                num = num & nums[j]
+                if not num:
+                    break
+                l, curnum = 0, num  # l表示有效宽度
+                while curnum:
+                    l += 1
+                    curnum = curnum & (curnum << 1)
+                ans = max(ans, l * (j - i + 1))
+                j += 1
+        return ans
+```
+
+
 
 86. [Partition List](https://leetcode-cn.com/problems/partition-list/)
 ```python
@@ -1242,6 +1308,26 @@ class Solution:
         left_cur.next = right_dummy.next
         right_cur.next = None
         return left_dummy.next
+```
+
+87. [Scramble String](https://leetcode-cn.com/problems/scramble-string/solution/)
+```python
+import functools
+class Solution:
+    @functools.lru_cache(None)
+    def isScramble(self, s1: str, s2: str) -> bool:
+        if s1 == s2:
+            return True
+        if sorted(s1) != sorted(s2):
+            return False
+        for i in range(1, len(s1)):
+            if self.isScramble(s1[:i], s2[:i]) and self.isScramble(
+                    s1[i:], s2[i:]):
+                return True
+            if self.isScramble(s1[:i], s2[-i:]) and self.isScramble(
+                    s1[i:], s2[:-i]):
+                return True
+        return False
 ```
 
 88. [Merge Sorted Array](https://leetcode-cn.com/problems/merge-sorted-array/)
@@ -1397,7 +1483,30 @@ def numTrees(self, n):
 
 
 
-98. []()
+
+97. [Interleaving String](https://leetcode-cn.com/problems/interleaving-string/)
+```python
+class Solution:
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        r, c, l = len(s1), len(s2), len(s3)
+        if r + c != l:  # 长度不匹配
+            return False
+
+        dp = [True for _ in range(c + 1)]
+
+        for j in range(1, c + 1):
+            dp[j] = dp[j - 1] and s2[j - 1] == s3[j - 1]
+
+        for i in range(1, r + 1):
+            dp[0] = (dp[0] and s1[i - 1] == s3[i - 1])
+            for j in range(1, c + 1):
+                dp[j] = (dp[j] and s1[i - 1] == s3[i - 1 + j]) or (
+                    dp[j - 1] and s2[j - 1] == s3[i - 1 + j])
+
+        return dp[-1]
+```
+
+98. [Validate Binary Search Tree](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 ```python
 class Solution:
     def isValidBST(self, root: TreeNode) -> bool:
