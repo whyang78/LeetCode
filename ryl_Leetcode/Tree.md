@@ -2,7 +2,7 @@
 
 ## 100. Same Tree
 
-![1571892088074](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1571892088074.png)
+![same_tree](img\same_tree.jpg)
 
 解题思路：
 
@@ -30,7 +30,7 @@ public:
 
 ## 101. Symmetric Tree
 
-![1571892500833](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1571892500833.png)
+![symmetric_tree](img\symmetric_tree.jpg)
 
 解题思路：
 
@@ -61,7 +61,7 @@ public:
 
 ## 104. Maximum Depth of Binary Tree
 
-![1571893001322](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1571893001322.png)
+![MDBT](img\Maximum Depth of Binary Tree.jpg)
 
 解题思路：
 
@@ -88,13 +88,13 @@ public:
 
 ## 144. Binary Tree Preorder Traversal
 
-![1572005410205](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1572005410205.png)
+![BTPT](F:\Github\LeetCode\ryl_Leetcode\img\Binary Tree Preorder Traversal.jpg)
 
 **解题思路：**
 
 使用递归的方法：理解二叉树的前序遍历
 
-使用非递归的方法：后面在补充
+使用非递归的方法：用栈模拟递归。首先需要清晰的明白树的前序遍历是怎么回事，然后再用栈模拟递归
 
 ```cpp
 /**
@@ -125,15 +125,46 @@ public:
 };
 ```
 
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        // 用栈模拟递归
+        stack<TreeNode*> st;
+        vector<int> res;
+        
+        if(root) st.push(root);
+        while(!st.empty())
+        {
+            auto tmp = st.top();
+            res.push_back(tmp->val), st.pop();
+            if (tmp->right) st.push(tmp->right);
+            if (tmp->left) st.push(tmp->left);
+        }
+        
+        return res;
+    }
+};
+```
+
 ## 94. Binary Tree Inorder Traversal
 
-![1572005701992](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1572005701992.png)
+![94](img\94.jpg)
 
 **解题思路：**
 
 使用递归的方法：理解二叉树的中序遍历
 
-使用非递归的方法：后面在补充
+使用非递归的方法：使用栈模拟递归，明确树的中序遍历之后再使用栈去模拟递归
 
 ```cpp
 /**
@@ -163,9 +194,46 @@ public:
 };
 ```
 
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        stack<TreeNode*> st;
+        vector<int> res;
+        
+        auto curr = root;
+        //只有当前节点为空，并且栈也为空才算遍历完成（因为存在只有栈为空或者只有当前节点为空的时候）
+        while(curr || !st.empty()) 
+        {
+            while(curr)
+            {
+                st.push(curr);
+                curr = curr->left;
+            }
+
+            auto tmp = st.top();
+            st.pop();
+            res.push_back(tmp->val);
+            curr = tmp->right;
+        }
+        
+        return res;
+    } 
+};
+```
+
 ## 145. Binary Tree Posterorder Traversal
 
-![1572005957601](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\1572005957601.png)
+![BTPT](img\Binary Tree Postorder Traversal.jpg)
 
 **解题思路：**
 
@@ -203,7 +271,7 @@ public:
 
 ## 102. Binary Tree Level Order Traversal
 
-![image-20191028155644966](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\image-20191028155644966.png)
+![image-20191028155644966](img\Binary Tree Level Order Traversal.jpg)
 
 解题思路：
 
@@ -222,29 +290,34 @@ public:
 class Solution {
 public:
     vector<vector<int>> levelOrder(TreeNode* root) {
-        // BFS 
-        if (!root) return {};
-        vector<vector<int>> ans;
-        // curr 和 next 分别表示的是当前遍历的这一层，和下一次将要遍历的层 
+        // BFS
+        /*
+            二叉树的层次遍历的核心思想就是使用两个栈，一个是存储当前需要遍历元素的栈，另一个是存储下一次需要遍历元素的栈
+            下一次需要遍历的元素是在遍历当前栈的同时产生的，也就是遍历当前栈中的元素的时候，都需要判断一下当前遍历的节点
+            是否有孩子节点，如果有孩子节点的话以先左节点后有节点的顺序添加到存储下一次遍历的栈中
+        */
+        vector<vector<int>> res;
         vector<TreeNode*> curr, next;
-        curr.push_back(root);
+        
+        if (root) curr.push_back(root);
         while(!curr.empty())
         {
-            // 动态的增加一行
-            ans.push_back({});
-            for(TreeNode* node : curr)
+            // 先添加一行
+            res.push_back({});
+            for(auto node : curr)
             {
-                // 每次都是最后一行添加元素
-                ans.back().push_back(node->val);
-                // 每次添加完一个元素之后都判断其左边和右边是否还有元素，有的话，先添加左边在添加右边
+                // 每次都是在最后一行进行添加元素
+                res.back().push_back(node->val);
+                // 为了保证访问的顺序，应该先把左边元素添加到next中
                 if (node->left) next.push_back(node->left);
                 if (node->right) next.push_back(node->right);
             }
+            
+            // 访问完当前的curr中的所有元素之后，应该将curr中的元素与next进行交换，然后让next置空
             swap(curr, next);
             next.clear();
         }
-        
-        return ans;
+        return res;
     }
 };
 ```
@@ -262,27 +335,29 @@ public:
 class Solution {
 public:
     vector<vector<int>> levelOrder(TreeNode* root) {
-        // DFS
-        vector<vector<int>> ans;
-        levelOrder(root, 0, ans);
+        /*
+            基于DFS的二叉树层次遍历，核心的思想就是动态并且是纵向的将每一层的元素添加到相应的层后面
+        */
+        vector<vector<int>> res;
+        DFS(root, 0, res);
         
-        return ans;
+        return res;
     }
     
-    void levelOrder(TreeNode* root, int depth, vector<vector<int>>& ans)
+    void DFS(TreeNode* root, int depth, vector<vector<int>>& res)
     {
-        if (!root) return;
-        while(ans.size() <= depth) ans.push_back({});
-        ans[depth].push_back(root->val);
-        levelOrder(root->left, depth + 1, ans);
-        levelOrder(root->right, depth + 1, ans);
+        if(!root) return;
+        if(res.size() <= depth) res.push_back({});
+        res[depth].push_back(root->val);
+        DFS(root->left, depth + 1, res);
+        DFS(root->right, depth + 1, res);
     }
 };
 ```
 
 ## 112. Path Sum
 
-![image-20191029161328941](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\image-20191029161328941.png)
+![PS](img\Path Sum.jpg)
 
 **解题思路：**
 
@@ -312,14 +387,14 @@ public:
 
 ## 226. Invert Binary Tree
 
-![image-20191029162225212](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\image-20191029162225212.png)
+![IBT](img\Invert Binary Tree.jpg)
 
 解题思路：
 
 逆转二叉树，从题意可以看出就是将二叉树的左右子树进行反转。只需要使用递归的方法将左右子节点分别进行逆转就可以。
 
 ```cpp
-/**
+![Minimum Depth of Binary Tree](F:\Github\LeetCode\ryl_Leetcode\img\Minimum Depth of Binary Tree.jpg)![Minimum Depth of Binary Tree](F:\Github\LeetCode\ryl_Leetcode\img\Minimum Depth of Binary Tree.jpg)/**
  * Definition for a binary tree node.
  * struct TreeNode {
  *     int val;
@@ -341,7 +416,7 @@ public:
 
 ## 111. Minimun Depth of Binary Tree
 
-![image-20191030144432893](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\image-20191030144432893.png)
+![MDBT](img\Minimum Depth of Binary Tree.jpg)
 
 解题思路：
 
@@ -377,7 +452,7 @@ public:
 
 ## 235. Lowest common Ancestor of a Binary Search Tree
 
-![image-20191030145507929](C:\Users\ryLuo\AppData\Roaming\Typora\typora-user-images\image-20191030145507929.png)
+![LABST](img\Lowest Common Ancestor of a Binary Search Tree.jpg)
 
 解题思路：
 
