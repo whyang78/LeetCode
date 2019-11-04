@@ -1762,6 +1762,21 @@ class Solution:
 ```
 - 递归的将root的左子树链接到右子树上
 
+115. [Distinct Subsequences](https://leetcode-cn.com/problems/distinct-subsequences/)
+```python
+class Solution:
+    def numDistinct(self, s: str, t: str) -> int:
+        l1, l2 = len(s) + 1, len(t) + 1
+        cur = [0] * l2
+        cur[0] = 1
+        for i in range(1, l1):
+            pre = cur[:]
+            for j in range(1, l2):
+                cur[j] = pre[j] + pre[j - 1] * (s[i - 1] == t[j - 1])
+        return cur[-1]
+```
+
+
 116. [Populating Next Right Pointers in Each Node](https://leetcode-cn.com/problems/populating-next-right-pointers-in-each-node/)
 ```python
 class Solution:
@@ -1836,6 +1851,17 @@ class Solution:
                 min_price, price)
         return max_profit
 ```
+
+139. [Word Break](https://leetcode-cn.com/problems/word-break/)
+```python
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        ok = [True]
+        for i in range(1, len(s) + 1):
+            ok += any(ok[j] and s[j:i] in wordDict for j in range(i)),
+        return ok[-1]
+```
+
 
 1.   [Best Time to Buy and Sell Stock II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 ```python
