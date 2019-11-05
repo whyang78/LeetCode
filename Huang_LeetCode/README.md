@@ -2279,6 +2279,32 @@ class Solution:
         head = self._mergeLists(a, b)
 ```
 
+133. [Clone Graph](https://leetcode-cn.com/problems/clone-graph/solution/)
+```python
+import copy
+class Solution:
+    def cloneGraph(self, node: 'Node') -> 'Node':
+        return copy.deepcopy(node)
+```
+140. [Word Break II](https://leetcode-cn.com/problems/word-break-ii/)
+```python
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> List[str]:
+        memo = {len(s): ['']}
+
+        def sentences(i):
+            if i not in memo:
+                memo[i] = [
+                    s[i:j] + (tail and ' ' + tail)
+                    for j in range(i + 1,
+                                   len(s) + 1) if s[i:j] in wordDict
+                    for tail in sentences(j)
+                ]
+            return memo[i]
+
+        return sentences(0)
+```
+
 1.     [Binary Tree Preorder Traversal](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 ```python
 def preorderTraversal(self, root):
