@@ -99,6 +99,22 @@ class Solution:
 - i 遍历字符串中的每一个字符,通过j的取值判断回文子串的中心字符取值情况。j为0时,子串假设为一个中心字符。j为1时，子串假设为两个中心字符。
 - r保存每次确定中心字符情况后的最大子串
 
+
+7. [Reverse Integer](https://leetcode-cn.com/problems/reverse-integer/solution)
+```python
+class Solution:
+    def reverse(self, x: int) -> int:
+        # x // max(1, abs(x)) 相当于cmp函数
+        r = x // max(1, abs(x)) * int(str(abs(x))[::-1])
+        return r if r.bit_length() < 32 or r == -2**31 else 0
+```
+
+- x // max(1, abs(x))意味着 0：x为0， 1：x为正， -1：x为负，相当于被废弃的函数cmp
+- [::-1]代表序列反转
+- 2^31 和 -2^31 的比特数为32，其中正负号占用了一位
+- 32位整数范围 [−2^31, 2^31 − 1] 中正数范围小一个是因为0的存在
+
+
 8. [String to Integer(atoi)](https://leetcode-cn.com/problems/string-to-integer-atoi)
 ```python
 class Solution:
@@ -109,6 +125,13 @@ class Solution:
 ```
 - 使用正则表达式 ^：匹配字符串开头，[\+\-]：代表一个+字符或-字符，?：前面一个字符可有可无，\d：一个数字，+：前面一个字符的一个或多个，\D：一个非数字字符，*：前面一个字符的0个或多个
 - max(min(数字, 2 ** 31 - 1), -2 ** 31) 用来防止结果越界
+
+9. [Palindrome Number](https://leetcode-cn.com/problems/palindrome-number/)
+```python
+class Solution:
+    def isPalindrome(self, x: int) -> bool:
+        return str(x) == str(x)[::-1]
+```
 
 10. [Regular Expression Matching](https://leetcode-cn.com/problems/regular-expression-matching/)
 ```python
@@ -2277,6 +2300,32 @@ class Solution:
         a, b = self._splitList(head)
         b = self._reverseList(b)
         head = self._mergeLists(a, b)
+```
+
+133. [Clone Graph](https://leetcode-cn.com/problems/clone-graph/solution/)
+```python
+import copy
+class Solution:
+    def cloneGraph(self, node: 'Node') -> 'Node':
+        return copy.deepcopy(node)
+```
+140. [Word Break II](https://leetcode-cn.com/problems/word-break-ii/)
+```python
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> List[str]:
+        memo = {len(s): ['']}
+
+        def sentences(i):
+            if i not in memo:
+                memo[i] = [
+                    s[i:j] + (tail and ' ' + tail)
+                    for j in range(i + 1,
+                                   len(s) + 1) if s[i:j] in wordDict
+                    for tail in sentences(j)
+                ]
+            return memo[i]
+
+        return sentences(0)
 ```
 
 1.     [Binary Tree Preorder Traversal](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
