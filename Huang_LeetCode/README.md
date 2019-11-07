@@ -871,6 +871,41 @@ class Solution:
 ```
 
 
+56. [合并区间](https://leetcode-cn.com/problems/merge-intervals/)
+```python
+class Solution:
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        out = []
+        for i in sorted(intervals, key=lambda i: i[0]):
+            if out and i[0] <= out[-1][-1]:
+                out[-1][-1] = max(out[-1][-1], i[-1])
+            else:
+                out += [i]
+        return out
+```
+- 按照坐标起点排序,判断边界合并
+
+57. [Insert Interval](https://leetcode-cn.com/problems/insert-interval/)
+```python
+class Solution:
+    def insert(self, intervals: List[List[int]],
+               newInterval: List[int]) -> List[List[int]]:
+        start, end = newInterval[0], newInterval[-1]
+        left, right = [], []
+        for i in intervals:
+            if i[-1] < start:
+                left.append(i)
+            elif i[0] > end:
+                right.append(i)
+            else:
+                start = min(start, i[0])
+                end = max(end, i[-1])
+
+        return left + [[start, end]] + right
+```
+- 借鉴56题的思路
+
+
 58. [Length of Last Word](https://leetcode-cn.com/problems/length-of-last-word/)
 ```python
 class Solution:
@@ -1149,6 +1184,27 @@ class Solution:
                 blue -= 1
 ```
 - 双指针，两边向中间走
+
+
+76. [Minimum Window Substring](https://leetcode-cn.com/problems/minimum-window-substring/)
+```python
+import collections
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        need, missing = collections.Counter(t), len(t)
+        i = I = J = 0
+        for j, c in enumerate(s, 1):
+            missing -= need[c] > 0
+            need[c] -= 1
+            if not missing:
+                while i < j and need[s[i]] < 0:
+                    need[s[i]] += 1
+                    i += 1
+                if not J or j - i <= J - I:
+                    I, J = i, j
+        return s[I:J]
+```
+- 滑动窗口,Counter记录所需字符数 while 循环移动左指针,寻找更短子串
 
 
 77. [Combinations](https://leetcode-cn.com/problems/combinations/)
